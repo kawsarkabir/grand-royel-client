@@ -6,6 +6,7 @@ import { createBrowserRouter } from 'react-router';
 import PrivateRoute from './PrivateRoutes';
 import Dashboard from '@/pages/dashboard/Dashboard';
 import NotFoundPage from '@/pages/NotFound/NotFound';
+import MyBookings from '@/pages/MyBookings/MyBookings';
 
 export const router = createBrowserRouter([
   {
@@ -16,6 +17,15 @@ export const router = createBrowserRouter([
       {
         index: true,
         element: <Home />,
+      },
+      // private routes
+      {
+        path: '/my-bookings',
+        element: (
+          <PrivateRoute>
+            <MyBookings />
+          </PrivateRoute>
+        ),
       },
       {
         path: '/dashboard',

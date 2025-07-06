@@ -38,10 +38,10 @@ export const AuthProvider = ({ children }) => {
       });
 
       // SEND EMAIL VARIFICATION LINK: Send verification email
-      await sendEmailVerification(result.user);
+      // await sendEmailVerification(result.user);
       setUser(result.user);
       toast.success(
-        'Account created successfully! Please check your email to verify your account.',
+        'Account created successfully!',
         { duration: 5000 },
       );
       return result.user;
@@ -59,13 +59,13 @@ export const AuthProvider = ({ children }) => {
       await result.user.reload();
 
       // ISEMAIL VARIFY: check email varified
-      if (!result.user.emailVerified) {
-        toast.error(
-          'Please verify your email before signing in. Check your inbox for the verification link.',
-          { duration: 5000 },
-        );
-        return null;
-      }
+      // if (!result.user.emailVerified) {
+      //   toast.error(
+      //     'Please verify your email before signing in. Check your inbox for the verification link.',
+      //     { duration: 5000 },
+      //   );
+      //   return null;
+      // }
 
       // UPDATE: current user
       setUser(result.user);
