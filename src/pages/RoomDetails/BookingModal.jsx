@@ -73,7 +73,7 @@ export function BookingModal({ isOpen, onClose, room }) {
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="sm:max-w-[425px] md:max-w-3xl">
+      <DialogContent className="sm:max-w-[425px] md:max-w-2xl">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 ">
           <div>
             <DialogHeader>
