@@ -91,7 +91,7 @@ const allRooms = [
   },
   {
     id: '8',
-    name: 'Cozy Single Room',
+    author: 'Cozy Single Room',
     description: 'Perfect for solo travelers seeking comfort and convenience.',
     price: 120,
     image: '/placeholder.svg?height=300&width=400',
