@@ -1,112 +1,118 @@
-import { RoomCard } from "./components/RoomCard";
-import { RoomFilter } from "./components/RoomFilter";
+import { useRooms } from '@/hooks/useRooms';
+import { RoomCard } from './components/RoomCard';
+import { RoomFilter } from './components/RoomFilter';
 
 // Dummy data for rooms - in a real app, this would be fetched from a database
-const allRooms = [
-  {
-    id: '1',
-    name: 'Deluxe City View Room',
-    description: 'Enjoy stunning cityscapes from your private balcony.',
-    price: 250,
-    image: '/placeholder.svg?height=300&width=400',
-    rating: 4.8,
-    reviews: 120,
-    amenities: ['Wifi', 'TV', 'Minibar', 'City View'],
-    location: 'Downtown',
-    isAvailable: true,
-  },
-  {
-    id: '2',
-    name: 'Executive Suite',
-    description:
-      'Spacious suite with a separate living area and premium amenities.',
-    price: 450,
-    image: '/placeholder.svg?height=300&width=400',
-    rating: 4.9,
-    reviews: 85,
-    amenities: ['Wifi', 'TV', 'Minibar', 'Bathtub', 'Lounge Access'],
-    location: 'Downtown',
-    isAvailable: true,
-  },
-  {
-    id: '3',
-    name: 'Standard Double Room',
-    description: 'Comfortable and cozy, perfect for a relaxing stay.',
-    price: 180,
-    image: '/placeholder.svg?height=300&width=400',
-    rating: 4.5,
-    reviews: 200,
-    amenities: ['Wifi', 'TV'],
-    location: 'Downtown',
-    isAvailable: true,
-  },
-  {
-    id: '4',
-    name: 'Family Connecting Room',
-    description: 'Two connecting rooms ideal for families with children.',
-    price: 350,
-    image: '/placeholder.svg?height=300&width=400',
-    rating: 4.7,
-    reviews: 95,
-    amenities: ['Wifi', 'TV', 'Connecting Door'],
-    location: 'Downtown',
-    isAvailable: true,
-  },
-  {
-    id: '5',
-    name: 'Oceanfront Villa',
-    description:
-      'Private villa with breathtaking ocean views and direct beach access.',
-    price: 700,
-    image: '/placeholder.svg?height=300&width=400',
-    rating: 5.0,
-    reviews: 50,
-    amenities: ['Wifi', 'TV', 'Private Pool', 'Ocean View', 'Beach Access'],
-    location: 'Beachfront',
-    isAvailable: true,
-  },
-  {
-    id: '6',
-    name: 'Garden View Room',
-    description: 'Peaceful room overlooking our lush, manicured gardens.',
-    price: 220,
-    image: '/placeholder.svg?height=300&width=400',
-    rating: 4.6,
-    reviews: 150,
-    amenities: ['Wifi', 'TV', 'Garden View'],
-    location: 'Downtown',
-    isAvailable: true,
-  },
-  {
-    id: '7',
-    name: 'Penthouse Suite',
-    description: 'The ultimate luxury experience with panoramic city views.',
-    price: 900,
-    image: '/placeholder.svg?height=300&width=400',
-    rating: 4.9,
-    reviews: 30,
-    amenities: ['Wifi', 'TV', 'Minibar', 'Jacuzzi', 'Private Balcony'],
-    location: 'Downtown',
-    isAvailable: true,
-  },
-  {
-    id: '8',
-    author: 'Cozy Single Room',
-    description: 'Perfect for solo travelers seeking comfort and convenience.',
-    price: 120,
-    image: '/placeholder.svg?height=300&width=400',
-    rating: 4.3,
-    reviews: 180,
-    amenities: ['Wifi', 'TV'],
-    location: 'Downtown',
-    isAvailable: true,
-  },
-];
+// const allRooms = [
+//   {
+//     id: '1',
+//     name: 'Deluxe City View Room',
+//     description: 'Enjoy stunning cityscapes from your private balcony.',
+//     price: 250,
+//     image: '/placeholder.svg?height=300&width=400',
+//     rating: 4.8,
+//     reviews: 120,
+//     amenities: ['Wifi', 'TV', 'Minibar', 'City View'],
+//     location: 'Downtown',
+//     isAvailable: true,
+//   },
+//   {
+//     id: '2',
+//     name: 'Executive Suite',
+//     description:
+//       'Spacious suite with a separate living area and premium amenities.',
+//     price: 450,
+//     image: '/placeholder.svg?height=300&width=400',
+//     rating: 4.9,
+//     reviews: 85,
+//     amenities: ['Wifi', 'TV', 'Minibar', 'Bathtub', 'Lounge Access'],
+//     location: 'Downtown',
+//     isAvailable: true,
+//   },
+//   {
+//     id: '3',
+//     name: 'Standard Double Room',
+//     description: 'Comfortable and cozy, perfect for a relaxing stay.',
+//     price: 180,
+//     image: '/placeholder.svg?height=300&width=400',
+//     rating: 4.5,
+//     reviews: 200,
+//     amenities: ['Wifi', 'TV'],
+//     location: 'Downtown',
+//     isAvailable: true,
+//   },
+//   {
+//     id: '4',
+//     name: 'Family Connecting Room',
+//     description: 'Two connecting rooms ideal for families with children.',
+//     price: 350,
+//     image: '/placeholder.svg?height=300&width=400',
+//     rating: 4.7,
+//     reviews: 95,
+//     amenities: ['Wifi', 'TV', 'Connecting Door'],
+//     location: 'Downtown',
+//     isAvailable: true,
+//   },
+//   {
+//     id: '5',
+//     name: 'Oceanfront Villa',
+//     description:
+//       'Private villa with breathtaking ocean views and direct beach access.',
+//     price: 700,
+//     image: '/placeholder.svg?height=300&width=400',
+//     rating: 5.0,
+//     reviews: 50,
+//     amenities: ['Wifi', 'TV', 'Private Pool', 'Ocean View', 'Beach Access'],
+//     location: 'Beachfront',
+//     isAvailable: true,
+//   },
+//   {
+//     id: '6',
+//     name: 'Garden View Room',
+//     description: 'Peaceful room overlooking our lush, manicured gardens.',
+//     price: 220,
+//     image: '/placeholder.svg?height=300&width=400',
+//     rating: 4.6,
+//     reviews: 150,
+//     amenities: ['Wifi', 'TV', 'Garden View'],
+//     location: 'Downtown',
+//     isAvailable: true,
+//   },
+//   {
+//     id: '7',
+//     name: 'Penthouse Suite',
+//     description: 'The ultimate luxury experience with panoramic city views.',
+//     price: 900,
+//     image: '/placeholder.svg?height=300&width=400',
+//     rating: 4.9,
+//     reviews: 30,
+//     amenities: ['Wifi', 'TV', 'Minibar', 'Jacuzzi', 'Private Balcony'],
+//     location: 'Downtown',
+//     isAvailable: true,
+//   },
+//   {
+//     id: '8',
+//     author: 'Cozy Single Room',
+//     description: 'Perfect for solo travelers seeking comfort and convenience.',
+//     price: 120,
+//     image: '/placeholder.svg?height=300&width=400',
+//     rating: 4.3,
+//     reviews: 180,
+//     amenities: ['Wifi', 'TV'],
+//     location: 'Downtown',
+//     isAvailable: true,
+//   },
+// ];
 
 export default function RoomsPage() {
   // In a real application, you would fetch rooms based on filter parameters
   // For this design, we'll just display allRooms and show the filter UI.
   // The filtering logic would typically happen on the server side.
+
+  const { data: rooms, isLoading, error } = useRooms();
+
+  if (isLoading) return <div>Loading rooms...</div>;
+  if (error) return <div>Error fetching rooms</div>;
 
   return (
     <div className="container px-4 md:px-6 py-12 md:py-24 lg:py-32 mx-auto">
@@ -119,8 +125,8 @@ export default function RoomsPage() {
             Our Rooms
           </h1>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-            {allRooms.map((room) => (
-              <RoomCard key={room.id} room={room} />
+            {rooms.map((room) => (
+              <RoomCard key={room._id} room={room} />
             ))}
           </div>
         </section>

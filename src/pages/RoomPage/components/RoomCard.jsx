@@ -24,7 +24,7 @@ export function RoomCard({ room }) {
   return (
     <Card className="flex flex-col overflow-hidden shadow hover:shadow-md transition-shadow duration-300">
       <Link
-        to={`/rooms/${room?.id}`}
+        to={`/rooms/${room?._id}`}
         className="block relative h-48 w-full overflow-hidden"
       >
         <img
