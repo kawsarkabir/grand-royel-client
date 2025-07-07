@@ -24,7 +24,7 @@ export function RoomCard({ room }) {
   return (
     <Card className="flex flex-col overflow-hidden shadow hover:shadow-md transition-shadow duration-300">
       <Link
-        href={`/rooms/${room.id}`}
+        to={`/rooms/${room?.id}`}
         className="block relative h-48 w-full overflow-hidden"
       >
         <img
@@ -48,7 +48,7 @@ export function RoomCard({ room }) {
           {renderStars(room.rating)}
           <span>({room.reviews} reviews)</span>
         </div>
-        <Link href={`/rooms/${room.id}`}>
+        <Link to={`/rooms/${room.id}`}>
           <Button size="sm">View Details</Button>
         </Link>
       </CardFooter>

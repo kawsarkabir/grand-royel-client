@@ -7,7 +7,8 @@ import PrivateRoute from './PrivateRoutes';
 import Dashboard from '@/pages/dashboard/Dashboard';
 import NotFoundPage from '@/pages/NotFound/NotFound';
 import MyBookings from '@/pages/MyBookings/MyBookings';
-import RoomsPage from '@/pages/RoomPage/RoomPage';
+import RoomsPage from '@/pages/RoomPage/Room';
+import RoomDetailsPage from '@/pages/RoomDetails/RoomDetails';
 
 export const router = createBrowserRouter([
   {
@@ -22,6 +23,10 @@ export const router = createBrowserRouter([
       {
         path: '/rooms',
         element: <RoomsPage />,
+      },
+      {
+        path: '/rooms/:id',
+        element: <RoomDetailsPage />,
       },
       // private routes
       {

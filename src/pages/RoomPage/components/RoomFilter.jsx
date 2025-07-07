@@ -8,15 +8,15 @@ import { Slider } from '@/components/ui/slider';
 export function RoomFilter() {
   const [minPrice, setMinPrice] = useState(50);
   const [maxPrice, setMaxPrice] = useState(1000);
-  const [priceRange, setPriceRange] = useState([50, 1000]);
+//   const [priceRange, setPriceRange] = useState([50, 1000]);
 
   const handleApplyFilter = () => {
     // In a real application, this would trigger a server-side fetch
     // with the selected minPrice and maxPrice.
-    console.log('Applying filter:', { minPrice, maxPrice });
-    alert(
-      `Filtering rooms from $${minPrice} to $${maxPrice}. (Server-side filter would apply here)`,
-    );
+    // console.log('Applying filter:', { minPrice, maxPrice });
+    // alert(
+    //   `Filtering rooms from $${minPrice} to $${maxPrice}. (Server-side filter would apply here)`,
+    // );
   };
 
   return (

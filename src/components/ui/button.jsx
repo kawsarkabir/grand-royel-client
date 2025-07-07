@@ -30,4 +30,4 @@ Button.propTypes = {
   asChild: PropTypes.bool,
 };
 
-export { Button };
+export { buttonVariants, Button };

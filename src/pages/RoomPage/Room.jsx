@@ -4,7 +4,7 @@ import { RoomFilter } from "./components/RoomFilter";
 // Dummy data for rooms - in a real app, this would be fetched from a database
 const allRooms = [
   {
-    id: 'room1',
+    id: '1',
     name: 'Deluxe City View Room',
     description: 'Enjoy stunning cityscapes from your private balcony.',
     price: 250,
@@ -16,7 +16,7 @@ const allRooms = [
     isAvailable: true,
   },
   {
-    id: 'room2',
+    id: '2',
     name: 'Executive Suite',
     description:
       'Spacious suite with a separate living area and premium amenities.',
@@ -29,7 +29,7 @@ const allRooms = [
     isAvailable: true,
   },
   {
-    id: 'room3',
+    id: '3',
     name: 'Standard Double Room',
     description: 'Comfortable and cozy, perfect for a relaxing stay.',
     price: 180,
@@ -41,7 +41,7 @@ const allRooms = [
     isAvailable: true,
   },
   {
-    id: 'room4',
+    id: '4',
     name: 'Family Connecting Room',
     description: 'Two connecting rooms ideal for families with children.',
     price: 350,
@@ -53,7 +53,7 @@ const allRooms = [
     isAvailable: true,
   },
   {
-    id: 'room5',
+    id: '5',
     name: 'Oceanfront Villa',
     description:
       'Private villa with breathtaking ocean views and direct beach access.',
@@ -66,7 +66,7 @@ const allRooms = [
     isAvailable: true,
   },
   {
-    id: 'room6',
+    id: '6',
     name: 'Garden View Room',
     description: 'Peaceful room overlooking our lush, manicured gardens.',
     price: 220,
@@ -78,7 +78,7 @@ const allRooms = [
     isAvailable: true,
   },
   {
-    id: 'room7',
+    id: '7',
     name: 'Penthouse Suite',
     description: 'The ultimate luxury experience with panoramic city views.',
     price: 900,
@@ -90,7 +90,7 @@ const allRooms = [
     isAvailable: true,
   },
   {
-    id: 'room8',
+    id: '8',
     name: 'Cozy Single Room',
     description: 'Perfect for solo travelers seeking comfort and convenience.',
     price: 120,
