@@ -53,17 +53,13 @@ export function SpecialOffersModal() {
           </p>
           <p>Valid for bookings made before August 31st, 2024.</p>
         </div>
-        <DialogFooter className="p-6 pt-0">
-          <Link href="/rooms">
-            <Button onClick={() => setIsOpen(false)} className="w-full">
-              Book Now
-            </Button>
-          </Link>
-          <Button
-            variant="outline"
-            onClick={() => setIsOpen(false)}
-            className="w-full mt-2"
-          >
+        <DialogFooter className="p-6 pt-0 items-center justify-between">
+          <div className='w-full'>
+            <Link to="/rooms" className="pt-0">
+              <Button onClick={() => setIsOpen(false)}>Book Now</Button>
+            </Link>
+          </div>
+          <Button variant="outline" onClick={() => setIsOpen(false)}>
             No Thanks
           </Button>
         </DialogFooter>
