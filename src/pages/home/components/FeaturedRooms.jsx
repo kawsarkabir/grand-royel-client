@@ -1,15 +1,15 @@
 import { Button } from '@/components/ui/button';
 import {
-    Card,
-    CardContent,
-    CardDescription,
-    CardFooter,
-    CardHeader,
-    CardTitle,
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
 } from '@/components/ui/card';
 import { Star } from 'lucide-react';
 import { Link } from 'react-router';
- 
+
 const featuredRooms = [
   {
     id: 'room1',
@@ -84,7 +84,7 @@ export function FeaturedRooms() {
           {featuredRooms.map((room) => (
             <Card
               key={room.id}
-              className="flex flex-col overflow-hidden shadow-lg hover:shadow-xl transition-shadow duration-300"
+              className="flex flex-col overflow-hidden shadow hover:shadow-md transition-shadow duration-300"
             >
               <Link
                 href={`/rooms/${room.id}`}
