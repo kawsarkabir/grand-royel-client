@@ -7,6 +7,7 @@ import PrivateRoute from './PrivateRoutes';
 import Dashboard from '@/pages/dashboard/Dashboard';
 import NotFoundPage from '@/pages/NotFound/NotFound';
 import MyBookings from '@/pages/MyBookings/MyBookings';
+import RoomsPage from '@/pages/RoomPage/RoomPage';
 
 export const router = createBrowserRouter([
   {
@@ -17,6 +18,10 @@ export const router = createBrowserRouter([
       {
         index: true,
         element: <Home />,
+      },
+      {
+        path: '/rooms',
+        element: <RoomsPage />,
       },
       // private routes
       {

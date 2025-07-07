@@ -9,6 +9,16 @@ const navLinks = [
     path: '/signin',
     id: 2,
   },
-  { name: 'My Bookings', path: '/my-bookings', id: 5, private: true },
+  {
+    name: 'Rooms',
+    path: '/rooms',
+    id: 5,
+  },
+  {
+    name: 'My Bookings',
+    path: '/my-bookings',
+    id: 6,
+    private: true,
+  },
 ];
 export default navLinks;

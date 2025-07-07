@@ -1,5 +1,5 @@
-import { RoomFilter } from '@/components/rooms/room-filter';
-import { RoomCard } from '@/components/rooms/room-card';
+import { RoomCard } from "./components/RoomCard";
+import { RoomFilter } from "./components/RoomFilter";
 
 // Dummy data for rooms - in a real app, this would be fetched from a database
 const allRooms = [
@@ -109,7 +109,7 @@ export default function RoomsPage() {
   // The filtering logic would typically happen on the server side.
 
   return (
-    <div className="container px-4 md:px-6 py-12 md:py-24 lg:py-32">
+    <div className="container px-4 md:px-6 py-12 md:py-24 lg:py-32 mx-auto">
       <div className="flex flex-col md:flex-row gap-8">
         <aside className="w-full md:w-1/4 lg:w-1/5">
           <RoomFilter />
