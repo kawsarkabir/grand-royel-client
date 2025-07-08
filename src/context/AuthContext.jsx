@@ -4,7 +4,6 @@ import {
   signInWithEmailAndPassword,
   signInWithPopup,
   sendPasswordResetEmail,
-  sendEmailVerification,
   updateProfile,
   onAuthStateChanged,
   signOut,
@@ -40,10 +39,7 @@ export const AuthProvider = ({ children }) => {
       // SEND EMAIL VARIFICATION LINK: Send verification email
       // await sendEmailVerification(result.user);
       setUser(result.user);
-      toast.success(
-        'Account created successfully!',
-        { duration: 5000 },
-      );
+      toast.success('Account created successfully!', { duration: 5000 });
       return result.user;
     } catch (error) {
       const message = getAuthErrorMessage(error);

@@ -43,13 +43,18 @@ export function BookingModal({ isOpen, onClose, room }) {
         roomId: room._id,
         date: selectedDate.toISOString().split('T')[0],
         guests: parseInt(numberOfGuests),
+        roomName: room.name,
+        roomImage: room.images?.[0] || '/placeholder.jpg',
+        roomPrice: room.price,
       });
-      toast.success('Booking confirmed!');
+
+      toast.success(res.data.message);
       onClose();
-      // Optionally reload page or redirect to /my-bookings
     } catch (err) {
-      toast.error(err);
-      setError(err.response?.data?.message || 'Booking failed');
+      const message =
+        err.response?.data?.message || err.message || 'Booking failed';
+      setError(message);
+      toast.error(message);
     } finally {
       setLoading(false);
     }
@@ -91,7 +96,7 @@ export function BookingModal({ isOpen, onClose, room }) {
               />
               {selectedDate && (
                 <p className="text-sm text-muted-foreground text-center mt-2">
-                  Selected Date:{' '}
+                  Selected Date:
                   <span className="font-semibold">
                     {format(selectedDate, 'PPP')}
                   </span>

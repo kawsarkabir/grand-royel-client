@@ -7,6 +7,7 @@ const getRooms = async (minPrice, maxPrice) => {
   if (maxPrice !== null) queryParams.append('maxPrice', maxPrice);
 
   const res = await axiosInstance.get(`/rooms?${queryParams.toString()}`);
+  console.log('🟡 Raw room data:', res.data); // ✅ Add this
   return res.data;
 };
 

@@ -1,90 +1,62 @@
-// import { useEffect, useState } from 'react';
-// import { BookingTable } from '@/components/my-bookings/booking-table';
-// import { Button } from '@/components/ui/button';
-// import { Link } from 'react-router';
+import { useEffect, useState } from 'react';
+import axiosInstance from '@/lib/axiosInstance';
+import { toast } from 'sonner';
 
-// // Dummy data for user bookings
-// const dummyBookings = [
-//   {
-//     id: 'booking1',
-//     roomId: 'room1',
-//     roomName: 'Deluxe City View Room',
-//     roomImage: '/placeholder.svg?height=100&width=150',
-//     price: 250,
-//     bookedDate: '2024-07-20', // YYYY-MM-DD
-//     status: 'confirmed',
-//   },
-//   {
-//     id: 'booking2',
-//     roomId: 'room3',
-//     roomName: 'Standard Double Room',
-//     roomImage: '/placeholder.svg?height=100&width=150',
-//     price: 180,
-//     bookedDate: '2024-08-10',
-//     status: 'confirmed',
-//   },
-//   {
-//     id: 'booking3',
-//     roomId: 'room6',
-//     roomName: 'Garden View Room',
-//     roomImage: '/placeholder.svg?height=100&width=150',
-//     price: 220,
-//     bookedDate: '2024-07-15',
-//     status: 'cancelled', // Example of a cancelled booking
-//   },
-// ];
-
-// export default function MyBookingsPage() {
-// //   const [isLoggedIn, setIsLoggedIn] = useState(false);
-// //   const router = useRouter();
-
-// //   useEffect(() => {
-// //     // In a real app, check for JWT token or Firebase auth state
-// //     const token = localStorage.getItem('jwt_token');
-// //     if (!token) {
-// //       router.push('/login'); // Redirect to login if not authenticated
-// //     } else {
-// //       setIsLoggedIn(true);
-// //       // In a real app, fetch user-specific bookings here
-// //     }
-// //   }, [router]);
-
-// //   if (!isLoggedIn) {
-// //     return (
-// //       <div className="flex flex-col items-center justify-center min-h-[calc(100vh-140px)] py-12 px-4 text-center">
-// //         <h1 className="text-2xl font-bold mb-4">Access Denied</h1>
-// //         <p className="text-muted-foreground mb-6">
-// //           Please log in to view your bookings.
-// //         </p>
-// //         <Link href="/login">
-// //           <Button>Go to Login</Button>
-// //         </Link>
-// //       </div>
-// //     );
-// //   }
-
-//   return (
-//     <div className="container px-4 md:px-6 py-12 md:py-24 lg:py-32">
-//       <h1 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl mb-8">
-//         My Bookings
-//       </h1>
-//       {dummyBookings.length === 0 ? (
-//         <div className="text-center text-muted-foreground py-12">
-//           <p className="text-lg mb-4">You haven&apos;t booked any rooms yet.</p>
-//           <Link href="/rooms">
-//             <Button>Explore Rooms</Button>
-//           </Link>
-//         </div>
-//       ) : (
-//         <BookingTable bookings={dummyBookings} />
-//       )}
-//     </div>
-//   );
-// }
 export default function MyBookings() {
+  const [bookings, setBookings] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchBookings = async () => {
+      try {
+        const res = await axiosInstance.get('/bookings/my-bookings');
+        setBookings(res.data);
+      } catch (err) {
+        toast.error('Failed to load bookings');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchBookings();
+  }, []);
+
+  if (loading) return <p className="text-center mt-10">Loading...</p>;
+
+  if (bookings.length === 0)
+    return <p className="text-center mt-10">You have no bookings.</p>;
+
   return (
-    <>
-      <h1>my boking</h1>
-    </>
+    <div className="max-w-4xl mx-auto mt-8 px-4">
+      <h1 className="text-2xl font-bold mb-4">My Bookings</h1>
+      <div className="grid gap-4">
+        {bookings.map((booking) => (
+          <div
+            key={booking._id}
+            className="border rounded-lg p-4 shadow-sm hover:shadow-md transition"
+          >
+            <div className="flex gap-4 items-center">
+              <img
+                src={booking.roomImage}
+                alt={booking.roomName}
+                className="w-24 h-24 object-cover rounded"
+              />
+              <div>
+                <h2 className="font-bold text-lg">{booking.roomName}</h2>
+                <p className="text-sm text-muted-foreground">
+                  Date: {booking.date}
+                </p>
+                <p className="text-sm text-muted-foreground">
+                  Guests: {booking.guests}
+                </p>
+                <p className="font-semibold text-primary">
+                  ${booking.roomPrice}
+                </p>
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
   );
 }
