@@ -1,78 +1,47 @@
-import { useEffect, useState } from 'react';
-import axios from 'axios';
+import React, { useState } from 'react';
 import moment from 'moment';
+ import { useCancelBooking, useMyBookings, useUpdateBookingDate } from '@/hooks/useMyBookings';
+import { UpdateDateModal } from './UpdateDateModal';
 
 export default function MyBookingsPage() {
-  const [bookings, setBookings] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const { data: bookings = [], isLoading } = useMyBookings();
+  const cancelBookingMutation = useCancelBooking();
+  const updateBookingMutation = useUpdateBookingDate();
 
-  // Fetch bookings from API
-  const fetchBookings = async () => {
-    try {
-      const res = await axios.get('http://localhost:5000/api/my-bookings', {
-        withCredentials: true,
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem('jwt_token')}`,
-        },
+  const [selectedBooking, setSelectedBooking] = useState(null);
+  const [updateModalOpen, setUpdateModalOpen] = useState(false);
+
+  const handleCancelBooking = (bookingId) => {
+    if (window.confirm('Are you sure you want to cancel this booking?')) {
+      cancelBookingMutation.mutate(bookingId, {
+        onSuccess: () => alert('Booking cancelled successfully!'),
+        onError: () => alert('Failed to cancel booking.'),
       });
-      setBookings(res.data);
-    } catch (err) {
-      console.error('Booking fetch error:', err);
-    } finally {
-      setLoading(false);
     }
   };
 
-  useEffect(() => {
-    fetchBookings();
-  }, []);
+  const handleOpenUpdateModal = (booking) => {
+    setSelectedBooking(booking);
+    setUpdateModalOpen(true);
+  };
 
-  // Cancel a booking
-  const handleCancelBooking = async (bookingId) => {
-    const confirmCancel = window.confirm(
-      'Are you sure you want to cancel this booking?',
-    );
-    if (!confirmCancel) return;
-
-    try {
-      const res = await fetch(
-        `http://localhost:5000/api/bookings/${bookingId}`,
-        {
-          method: 'DELETE',
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem('jwt_token')}`,
-          },
+  const handleConfirmUpdate = (bookingId, newDate) => {
+    updateBookingMutation.mutate(
+      { bookingId, newDate: moment(newDate).format('YYYY-MM-DD') },
+      {
+        onSuccess: () => {
+          alert('Booking date updated!');
+          setUpdateModalOpen(false);
         },
-      );
-
-      if (res.ok) {
-        alert('Booking cancelled successfully!');
-        fetchBookings(); // Refresh data
-      } else {
-        alert('Failed to cancel booking.');
-      }
-    } catch (err) {
-      console.error(err);
-      alert('Server error while cancelling booking.');
-    }
+        onError: () => alert('Failed to update booking date.'),
+      },
+    );
   };
 
-  // Placeholder: Update date
-  const handleUpdate = (bookingId) => {
-    alert(`You clicked Update Date for booking ID: ${bookingId}`);
-    // You can implement modal and date picker here
-  };
-
-  // Placeholder: Submit review
-  const handleReview = (bookingId) => {
-    alert(`You clicked Review for booking ID: ${bookingId}`);
-    // You can implement modal for review here
-  };
-
-  if (loading)
+  if (isLoading)
     return <div className="text-center py-20">Loading bookings...</div>;
 
-  if (bookings.length === 0) {
+  if (bookings.length === 0)
     return (
       <div className="text-center py-20">
         <h2 className="text-2xl font-bold">No Bookings Yet</h2>
@@ -81,7 +50,6 @@ export default function MyBookingsPage() {
         </p>
       </div>
     );
-  }
 
   return (
     <div className="container mx-auto px-4 py-12">
@@ -129,27 +97,32 @@ export default function MyBookingsPage() {
                   <button
                     className="text-red-600 hover:underline"
                     onClick={() => handleCancelBooking(booking.id)}
+                    disabled={cancelBookingMutation.isLoading}
                   >
                     Cancel
                   </button>
                   <button
                     className="text-yellow-600 hover:underline"
-                    onClick={() => handleUpdate(booking.id)}
+                    onClick={() => handleOpenUpdateModal(booking)}
                   >
                     Update Date
                   </button>
-                  <button
-                    className="text-blue-600 hover:underline"
-                    onClick={() => handleReview(booking.id)}
-                  >
-                    Review
-                  </button>
+                  {/* You can add Review button here */}
                 </td>
               </tr>
             ))}
           </tbody>
         </table>
       </div>
+
+      {selectedBooking && (
+        <UpdateDateModal
+          isOpen={updateModalOpen}
+          onClose={() => setUpdateModalOpen(false)}
+          booking={selectedBooking}
+          onConfirm={handleConfirmUpdate}
+        />
+      )}
     </div>
   );
 }
