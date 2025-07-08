@@ -127,3 +127,12 @@
 //     </Dialog>
 //   )
 // }
+
+
+export default function ReviewModal(){
+    return (
+         <>
+            <h1>review modal</h1>
+         </>
+    );
+}

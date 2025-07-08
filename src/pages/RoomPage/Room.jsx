@@ -17,7 +17,7 @@ export default function RoomsPage() {
     minPrice: filterApplied ? minPrice : null,
     maxPrice: filterApplied ? maxPrice : null,
   });
-  console.log(rooms);
+
   if (isLoading) return <LoadingSpinner />;
   if (error) return <div>Error fetching rooms</div>;
 
