@@ -1,16 +1,7 @@
 /* eslint-disable react/prop-types */
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
-import {
-  Star,
-  Wifi,
-  Tv,
-  Utensils,
-  Car,
-  Snowflake,
-  Sun,
-  MapPin,
-} from 'lucide-react';
+import { Star, Wifi } from 'lucide-react';
 import {
   Collapsible,
   CollapsibleContent,
@@ -23,6 +14,8 @@ import { RoomReviews } from './RoomReviews';
 import { useRoom } from '@/hooks/useRoom';
 import { useParams } from 'react-router';
 import LoadingSpinner from '@/components/LoadingSpinner';
+import { iconMap } from '@/utils/iconMap';
+import { toast } from 'sonner';
 
 const dummyReviews = [
   {
@@ -52,19 +45,15 @@ const dummyReviews = [
 ];
 
 export default function RoomDetailsPage() {
-  // In a real app, fetch room details and reviews based on params.roomId
   const { id: roomId } = useParams();
   const { data: room, isLoading } = useRoom(roomId);
 
-  // const room = dummyRoom; // Using dummy data for demonstration
-  const reviews = dummyReviews; // Using dummy data for demonstration
+  const reviews = dummyReviews;
 
   const [isBookingModalOpen, setIsBookingModalOpen] = useState(false);
 
   if (isLoading) return <LoadingSpinner />;
-  if (!room) {
-    return <div className="container py-12 text-center">Room not found.</div>;
-  }
+  if (!room) return toast.error('Room not found!');
 
   const renderStars = (rating) => {
     return Array.from({ length: 5 }, (_, i) => (
@@ -147,15 +136,18 @@ export default function RoomDetailsPage() {
             <div className="grid gap-4">
               <h2 className="text-2xl font-semibold">What this place offers</h2>
               <ul className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                {room.amenities?.map((amenity, index) => (
-                  <li
-                    key={index}
-                    className="flex items-center gap-2 text-muted-foreground"
-                  >
-                    <amenity.icon className="h-5 w-5 text-primary" />
-                    <span>{amenity.name}</span>
-                  </li>
-                ))}
+                {room?.amenities?.map((amenity, index) => {
+                  const Icon = iconMap[amenity.icon] || Wifi;
+                  return (
+                    <li
+                      key={index}
+                      className="flex items-center gap-2 text-muted-foreground"
+                    >
+                      <Icon className="h-5 w-5 text-primary" />
+                      <span>{amenity.name}</span>
+                    </li>
+                  );
+                })}
               </ul>
             </div>
             <Separator />

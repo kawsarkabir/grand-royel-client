@@ -115,7 +115,7 @@ export function FeaturedRooms() {
                     {room.rating} ({room.reviews} reviews)
                   </span>
                 </div>
-                <Link href={`/rooms/${room.id}`}>
+                <Link to={`/rooms/${room.id}`}>
                   <Button size="sm">Book Now</Button>
                 </Link>
               </CardFooter>

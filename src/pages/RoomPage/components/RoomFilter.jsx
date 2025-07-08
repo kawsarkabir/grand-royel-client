@@ -1,24 +1,17 @@
-import { useState } from 'react';
+/* eslint-disable react/prop-types */
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Slider } from '@/components/ui/slider';
 
-export function RoomFilter() {
-  const [minPrice, setMinPrice] = useState(50);
-  const [maxPrice, setMaxPrice] = useState(1000);
-//   const [priceRange, setPriceRange] = useState([50, 1000]);
-
-  const handleApplyFilter = () => {
-    // In a real application, this would trigger a server-side fetch
-    // with the selected minPrice and maxPrice.
-    // console.log('Applying filter:', { minPrice, maxPrice });
-    // alert(
-    //   `Filtering rooms from $${minPrice} to $${maxPrice}. (Server-side filter would apply here)`,
-    // );
-  };
-
+export function RoomFilter({
+  minPrice,
+  maxPrice,
+  setMinPrice,
+  setMaxPrice,
+  onApplyFilter,
+}) {
   return (
     <Card className="sticky top-20">
       <CardHeader>
@@ -46,7 +39,6 @@ export function RoomFilter() {
               className="w-1/2"
             />
           </div>
-          {/* Assuming shadcn Slider component is available */}
           <Slider
             id="price-range-slider"
             min={0}
@@ -60,8 +52,7 @@ export function RoomFilter() {
             className="mt-4"
           />
         </div>
-        {/* Add more filter options here if needed, e.g., amenities, room type */}
-        <Button onClick={handleApplyFilter} className="w-full">
+        <Button onClick={onApplyFilter} className="w-full">
           Apply Filters
         </Button>
       </CardContent>

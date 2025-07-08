@@ -20,6 +20,8 @@ import {
 } from '@/components/ui/select';
 import { Label } from '@/components/ui/label';
 import { Separator } from '@/components/ui/separator';
+import { toast } from 'sonner';
+import axiosInstance from '@/lib/axiosInstance';
 
 export function BookingModal({ isOpen, onClose, room }) {
   const [selectedDate, setSelectedDate] = useState(null);
@@ -32,44 +34,28 @@ export function BookingModal({ isOpen, onClose, room }) {
       setError('Please select a booking date.');
       return;
     }
-    if (!room.isAvailable) {
-      setError('This room is not available for booking.');
-      return;
-    }
 
-    setLoading(true);
-    setError(null);
-
-    // --- Booking Logic Placeholder ---
-    // In a real app, you would send a request to your backend to:
-    // 1. Verify room availability for the selected date.
-    // 2. Create a new booking record in the database.
-    // 3. Update the room's availability status if necessary.
-    // 4. Handle payment processing (if applicable).
     try {
-      await new Promise((resolve) => setTimeout(resolve, 2000)); // Simulate API call
+      setLoading(true);
+      setError(null);
 
-      // Simulate successful booking
-      console.log('Booking confirmed!', {
-        roomId: room.id,
+      const res = await axiosInstance.post('/bookings', {
+        roomId: room._id,
         date: selectedDate.toISOString().split('T')[0],
-        guests: numberOfGuests,
-        price: room.price,
+        guests: parseInt(numberOfGuests),
       });
-      alert(
-        `Booking for ${room.name} on ${format(selectedDate, 'PPP')} confirmed!`,
-      );
-      onClose(); // Close modal on success
-      // In a real app, you might redirect to My Bookings page or show a success message
+      toast.success('Booking confirmed!');
+      onClose();
+      // Optionally reload page or redirect to /my-bookings
     } catch (err) {
-      setError('Failed to confirm booking. Please try again.');
-      console.error('Booking error:', err);
+      toast.error(err);
+      setError(err.response?.data?.message || 'Booking failed');
     } finally {
       setLoading(false);
     }
   };
 
-  const totalAmount = room.price * Number.parseInt(numberOfGuests); // Simple calculation
+  const totalAmount = room.price * Number.parseInt(numberOfGuests);
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
@@ -130,10 +116,8 @@ export function BookingModal({ isOpen, onClose, room }) {
           </div>
         </div>
 
-        {/* <div className="grid gap-4 py-4 "> */}
         {/* <Separator /> */}
 
-        {/* </div> */}
         <Separator />
 
         <div className="flex justify-between items-center font-semibold text-lg">
