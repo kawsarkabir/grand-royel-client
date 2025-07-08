@@ -20,44 +20,9 @@ import { ChevronDown } from 'lucide-react';
 import { useState } from 'react';
 import { BookingModal } from './BookingModal';
 import { RoomReviews } from './RoomReviews';
-
-// Dummy data for a single room and its reviews
-const dummyRoom = {
-  id: 'room1',
-  name: 'Deluxe City View Room',
-  description:
-    'Experience the vibrant pulse of the city from the comfort of your Deluxe City View Room. Designed with modern elegance and equipped with all the amenities for a luxurious stay, this room offers breathtaking panoramic views of the urban landscape. Perfect for business travelers and tourists alike, it provides a serene escape amidst the bustling city.',
-  price: 250,
-  images: [
-    '/placeholder.svg?height=600&width=900',
-    '/placeholder.svg?height=300&width=400',
-    '/placeholder.svg?height=300&width=400',
-    '/placeholder.svg?height=300&width=400',
-    '/placeholder.svg?height=300&width=400',
-  ],
-  rating: 4.8,
-  totalReviews: 120,
-  amenities: [
-    { icon: Wifi, name: 'Free Wi-Fi' },
-    { icon: Tv, name: 'Smart TV' },
-    { icon: Utensils, name: 'Minibar' },
-    { icon: Car, name: 'Free Parking' },
-    { icon: Snowflake, name: 'Air Conditioning' },
-    { icon: Sun, name: 'Balcony' },
-    { icon: MapPin, name: 'City View' },
-  ],
-  guests: 2,
-  beds: 1,
-  bathrooms: 1,
-  host: {
-    name: 'Hotelio Management',
-    joined: '2015',
-    superhost: true,
-    avatar: '/placeholder-user.jpg',
-  },
-  location: '123 Main St, Cityville, State, Country',
-  isAvailable: true, // This would be dynamic based on booking dates
-};
+import { useRoom } from '@/hooks/useRoom';
+import { useParams } from 'react-router';
+import LoadingSpinner from '@/components/LoadingSpinner';
 
 const dummyReviews = [
   {
@@ -86,13 +51,17 @@ const dummyReviews = [
   },
 ];
 
-export default function RoomDetailsPage({ params }) {
+export default function RoomDetailsPage() {
   // In a real app, fetch room details and reviews based on params.roomId
-  const room = dummyRoom; // Using dummy data for demonstration
+  const { id: roomId } = useParams();
+  const { data: room, isLoading } = useRoom(roomId);
+
+  // const room = dummyRoom; // Using dummy data for demonstration
   const reviews = dummyReviews; // Using dummy data for demonstration
 
   const [isBookingModalOpen, setIsBookingModalOpen] = useState(false);
 
+  if (isLoading) return <LoadingSpinner />;
   if (!room) {
     return <div className="container py-12 text-center">Room not found.</div>;
   }
@@ -107,7 +76,7 @@ export default function RoomDetailsPage({ params }) {
   };
 
   return (
-    <div className="container px-4 md:px-6 py-8 md:py-12 lg:py-16">
+    <div className="container px-4 md:px-6 py-8 md:py-12 lg:py-16 mx-auto">
       <div className="grid gap-8 lg:grid-cols-[2fr_1fr] items-start">
         {/* Left Column: Images, Description, Amenities, Host */}
         <div className="grid gap-8">
@@ -178,7 +147,7 @@ export default function RoomDetailsPage({ params }) {
             <div className="grid gap-4">
               <h2 className="text-2xl font-semibold">What this place offers</h2>
               <ul className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                {room.amenities.map((amenity, index) => (
+                {room.amenities?.map((amenity, index) => (
                   <li
                     key={index}
                     className="flex items-center gap-2 text-muted-foreground"
