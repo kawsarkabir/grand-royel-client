@@ -1,8 +1,14 @@
 import React, { useState } from 'react';
 import moment from 'moment';
- import { useCancelBooking, useMyBookings, useUpdateBookingDate } from '@/hooks/useMyBookings';
+import {
+  useCancelBooking,
+  useMyBookings,
+  useUpdateBookingDate,
+} from '@/hooks/useMyBookings';
 import { UpdateDateModal } from './UpdateDateModal';
-
+import { ReviewModal } from './ReviewModal';
+import { CancelBookingModal } from './CencelBookingModal';
+ 
 export default function MyBookingsPage() {
   const { data: bookings = [], isLoading } = useMyBookings();
   const cancelBookingMutation = useCancelBooking();
@@ -10,15 +16,8 @@ export default function MyBookingsPage() {
 
   const [selectedBooking, setSelectedBooking] = useState(null);
   const [updateModalOpen, setUpdateModalOpen] = useState(false);
-
-  const handleCancelBooking = (bookingId) => {
-    if (window.confirm('Are you sure you want to cancel this booking?')) {
-      cancelBookingMutation.mutate(bookingId, {
-        onSuccess: () => alert('Booking cancelled successfully!'),
-        onError: () => alert('Failed to cancel booking.'),
-      });
-    }
-  };
+  const [reviewModalOpen, setReviewModalOpen] = useState(false);
+  const [cancelModalOpen, setCancelModalOpen] = useState(false);
 
   const handleOpenUpdateModal = (booking) => {
     setSelectedBooking(booking);
@@ -36,6 +35,26 @@ export default function MyBookingsPage() {
         onError: () => alert('Failed to update booking date.'),
       },
     );
+  };
+
+  const openReviewModal = (booking) => {
+    setSelectedBooking(booking);
+    setReviewModalOpen(true);
+  };
+
+  const openCancelModal = (booking) => {
+    setSelectedBooking(booking);
+    setCancelModalOpen(true);
+  };
+
+  const handleConfirmCancel = (bookingId) => {
+    cancelBookingMutation.mutate(bookingId, {
+      onSuccess: () => {
+        alert('Booking cancelled successfully!');
+        setCancelModalOpen(false);
+      },
+      onError: () => alert('Failed to cancel booking.'),
+    });
   };
 
   if (isLoading)
@@ -96,7 +115,7 @@ export default function MyBookingsPage() {
                 <td className="p-3 text-right space-x-2">
                   <button
                     className="text-red-600 hover:underline"
-                    onClick={() => handleCancelBooking(booking.id)}
+                    onClick={() => openCancelModal(booking)}
                     disabled={cancelBookingMutation.isLoading}
                   >
                     Cancel
@@ -107,7 +126,12 @@ export default function MyBookingsPage() {
                   >
                     Update Date
                   </button>
-                  {/* You can add Review button here */}
+                  <button
+                    className="text-blue-600 hover:underline"
+                    onClick={() => openReviewModal(booking)}
+                  >
+                    Review
+                  </button>
                 </td>
               </tr>
             ))}
@@ -115,13 +139,27 @@ export default function MyBookingsPage() {
         </table>
       </div>
 
+      {/* Modals */}
       {selectedBooking && (
-        <UpdateDateModal
-          isOpen={updateModalOpen}
-          onClose={() => setUpdateModalOpen(false)}
-          booking={selectedBooking}
-          onConfirm={handleConfirmUpdate}
-        />
+        <>
+          <UpdateDateModal
+            isOpen={updateModalOpen}
+            onClose={() => setUpdateModalOpen(false)}
+            booking={selectedBooking}
+            onConfirm={handleConfirmUpdate}
+          />
+          <ReviewModal
+            isOpen={reviewModalOpen}
+            onClose={() => setReviewModalOpen(false)}
+            booking={selectedBooking}
+          />
+          <CancelBookingModal
+            isOpen={cancelModalOpen}
+            onClose={() => setCancelModalOpen(false)}
+            booking={selectedBooking}
+            onConfirm={handleConfirmCancel}
+          />
+        </>
       )}
     </div>
   );
