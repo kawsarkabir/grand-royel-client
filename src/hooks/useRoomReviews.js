@@ -1,4 +1,3 @@
-// hooks/useRoomReviews.ts
 import axiosInstance from '@/lib/axiosInstance';
 import { useQuery } from '@tanstack/react-query';
 

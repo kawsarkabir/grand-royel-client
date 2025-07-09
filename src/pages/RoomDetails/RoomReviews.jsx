@@ -34,7 +34,7 @@ export function RoomReviews({ reviews }) {
               </AvatarFallback>
             </Avatar>
             <div className="grid">
-              <div className="font-semibold">{review.userEmail}</div>
+              <div className="font-semibold">{review.username}</div>
               <div className="flex items-center gap-1 text-sm text-muted-foreground">
                 {renderStars(review.rating)}
                 <span>{review.rating}/5</span>

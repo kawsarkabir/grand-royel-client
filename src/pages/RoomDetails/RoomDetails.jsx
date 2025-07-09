@@ -201,9 +201,7 @@ export default function RoomDetailsPage() {
       <section className="grid gap-8">
         <h2 className="text-3xl font-bold">Reviews ({reviews.length})</h2>
         {reviewsLoading ? (
-          <p className="text-center text-muted-foreground">
-            Loading reviews...
-          </p>
+          <LoadingSpinner />
         ) : (
           <RoomReviews reviews={Array.isArray(reviews) ? reviews : []} />
         )}

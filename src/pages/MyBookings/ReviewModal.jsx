@@ -42,7 +42,7 @@ export function ReviewModal({ isOpen, onClose, booking }) {
         roomId: booking.roomId,
         bookingId: booking.id,
         userId: user.id,
-        username: user.username,
+        username: user?.displayName,
         rating,
         comment,
         timestamp: new Date().toISOString(),
