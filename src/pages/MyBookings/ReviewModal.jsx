@@ -16,6 +16,7 @@ import { Star } from 'lucide-react';
 import axiosInstance from '@/lib/axiosInstance';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useAuth } from '@/hooks/useAuth';
+import { toast } from 'sonner';
 // import useAuth from "@/hooks/useAuth"; // if you have a user hook
 
 export function ReviewModal({ isOpen, onClose, booking }) {
@@ -51,6 +52,7 @@ export function ReviewModal({ isOpen, onClose, booking }) {
     onSuccess: () => {
       queryClient.invalidateQueries(['room-details', booking.roomId]); // if using cache
       queryClient.invalidateQueries(['my-bookings']);
+      toast.success('Reviews post successfully!');
       onClose();
     },
     onError: () => {
@@ -87,8 +89,8 @@ export function ReviewModal({ isOpen, onClose, booking }) {
 
         <div className="grid gap-4 py-4">
           <div className="grid gap-2">
-            <Label>Your Username</Label>
-            <Input value={user?.username} readOnly disabled />
+            <Label>Your Name</Label>
+            <Input value={user.displayName} readOnly disabled />
           </div>
 
           <div className="grid gap-2">

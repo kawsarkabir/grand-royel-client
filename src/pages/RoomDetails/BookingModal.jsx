@@ -23,7 +23,7 @@ import { Separator } from '@/components/ui/separator';
 import { toast } from 'sonner';
 import axiosInstance from '@/lib/axiosInstance';
 
-export function BookingModal({ isOpen, onClose, room }) {
+export function BookingModal({ isOpen, onClose, room, onBookingSuccess }) {
   const [selectedDate, setSelectedDate] = useState(null);
   const [numberOfGuests, setNumberOfGuests] = useState('1');
   const [loading, setLoading] = useState(false);
@@ -44,15 +44,17 @@ export function BookingModal({ isOpen, onClose, room }) {
         date: selectedDate.toISOString().split('T')[0],
         guests: parseInt(numberOfGuests),
         roomName: room.name,
-        roomImage: room.images?.[0] || '/placeholder.jpg',
+        roomImage: room.image || '/placeholder.jpg',
         roomPrice: room.price,
       });
 
-      toast.success(res.data.message);
-      onClose();
+      toast.success(res.data.message || 'Room booked successfully!');
+
+      // 🔄 Refetch room + close modal
+      if (onBookingSuccess) onBookingSuccess();
     } catch (err) {
       const message =
-        err.response?.data?.message || err.message || 'Booking failed';
+        err.response?.data?.error || err.message || 'Booking failed';
       setError(message);
       toast.error(message);
     } finally {
@@ -60,12 +62,13 @@ export function BookingModal({ isOpen, onClose, room }) {
     }
   };
 
-  const totalAmount = room.price * Number.parseInt(numberOfGuests);
+  const totalAmount = room.price * parseInt(numberOfGuests);
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="sm:max-w-[425px] md:max-w-2xl">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 ">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+          {/* Left Column: Room Details */}
           <div>
             <DialogHeader>
               <DialogTitle>Confirm Your Booking</DialogTitle>
@@ -73,6 +76,7 @@ export function BookingModal({ isOpen, onClose, room }) {
                 Review your room details and select your booking date.
               </DialogDescription>
             </DialogHeader>
+
             <div className="flex flex-col gap-2">
               <h3 className="text-lg font-semibold">{room.name}</h3>
               <p className="text-muted-foreground text-sm line-clamp-2">
@@ -84,6 +88,8 @@ export function BookingModal({ isOpen, onClose, room }) {
               </div>
             </div>
           </div>
+
+          {/* Right Column: Booking Inputs */}
           <div className="space-y-2">
             <div className="grid gap-2">
               <Label htmlFor="booking-date">Select Booking Date</Label>
@@ -96,7 +102,7 @@ export function BookingModal({ isOpen, onClose, room }) {
               />
               {selectedDate && (
                 <p className="text-sm text-muted-foreground text-center mt-2">
-                  Selected Date:
+                  Selected Date:{' '}
                   <span className="font-semibold">
                     {format(selectedDate, 'PPP')}
                   </span>
@@ -121,24 +127,26 @@ export function BookingModal({ isOpen, onClose, room }) {
           </div>
         </div>
 
-        {/* <Separator /> */}
-
         <Separator />
 
+        {/* Total Price */}
         <div className="flex justify-between items-center font-semibold text-lg">
           <span>Total:</span>
           <span>${totalAmount}</span>
         </div>
+
         {error && (
           <p className="text-sm text-destructive text-center">{error}</p>
         )}
+
+        {/* Footer Buttons */}
         <DialogFooter>
-          <Button variant="outline" onClick={onClose}>
+          <Button variant="outline" onClick={onClose} disabled={loading}>
             Cancel
           </Button>
           <Button
             onClick={handleBookingConfirm}
-            disabled={loading || !selectedDate || !room.isAvailable}
+            disabled={loading || !selectedDate || !room.available}
           >
             {loading ? 'Confirming...' : 'Confirm Booking'}
           </Button>

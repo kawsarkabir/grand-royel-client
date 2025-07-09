@@ -8,7 +8,10 @@ import {
 import { UpdateDateModal } from './UpdateDateModal';
 import { ReviewModal } from './ReviewModal';
 import { CancelBookingModal } from './CencelBookingModal';
- 
+import { toast } from 'sonner';
+import LoadingSpinner from '@/components/LoadingSpinner';
+import { Link } from 'react-router';
+
 export default function MyBookingsPage() {
   const { data: bookings = [], isLoading } = useMyBookings();
   const cancelBookingMutation = useCancelBooking();
@@ -50,15 +53,13 @@ export default function MyBookingsPage() {
   const handleConfirmCancel = (bookingId) => {
     cancelBookingMutation.mutate(bookingId, {
       onSuccess: () => {
-        alert('Booking cancelled successfully!');
         setCancelModalOpen(false);
       },
-      onError: () => alert('Failed to cancel booking.'),
+      onError: () => toast.error('Failed to cancel booking.'),
     });
   };
 
-  if (isLoading)
-    return <div className="text-center py-20">Loading bookings...</div>;
+  if (isLoading) return <LoadingSpinner />;
 
   if (bookings.length === 0)
     return (
@@ -96,7 +97,9 @@ export default function MyBookingsPage() {
                     className="w-20 h-14 object-cover rounded-md"
                   />
                 </td>
-                <td className="p-3 font-medium">{booking.roomName}</td>
+                <td className="p-3 font-medium">
+                  <Link to={`rooms/${booking.id}`}>{booking.roomName}</Link>
+                </td>
                 <td className="p-3">${booking.price}</td>
                 <td className="p-3">
                   {moment(booking.bookedDate).format('MMM DD, YYYY')}

@@ -16,8 +16,10 @@ import { useRoomReviews } from '@/hooks/useRoomReviews';
 import { BookingModal } from './BookingModal';
 import { RoomReviews } from './RoomReviews';
 import { iconMap } from '@/utils/iconMap';
+import { useQueryClient } from '@tanstack/react-query';
 
 export default function RoomDetailsPage() {
+  const queryClient = useQueryClient();
   const { id: roomId } = useParams();
   const { data: room, isLoading: roomLoading } = useRoom(roomId);
   const { data: reviews = [], isLoading: reviewsLoading } =
@@ -156,23 +158,39 @@ export default function RoomDetailsPage() {
                 ({room.totalReviews} reviews)
               </span>
             </div>
-            <Button
-              className="w-full py-3 text-lg"
-              onClick={() => setIsBookingModalOpen(true)}
-              disabled={!room.isAvailable}
-            >
-              {room.isAvailable ? 'Book Now' : 'Not Available'}
-            </Button>
-            {!room.isAvailable && (
-              <p className="text-sm text-destructive text-center mt-2">
-                This room is currently unavailable.
-              </p>
+
+            {/* Conditional Booking Button */}
+            {room.available ? (
+              <>
+                <Button
+                  className="w-full py-3 text-lg"
+                  onClick={() => setIsBookingModalOpen(true)}
+                >
+                  Book Now
+                </Button>
+                <BookingModal
+                  isOpen={isBookingModalOpen}
+                  onClose={() => setIsBookingModalOpen(false)}
+                  room={room}
+                  onBookingSuccess={() => {
+                    queryClient.invalidateQueries(['room', roomId]); // 🔄 refetch room
+                    setIsBookingModalOpen(false); // close modal
+                  }}
+                />
+              </>
+            ) : (
+              <>
+                <Button
+                  className="w-full py-3 text-lg cursor-not-allowed opacity-60"
+                  disabled
+                >
+                  Not Available
+                </Button>
+                <p className="text-sm text-destructive text-center mt-2">
+                  This room is currently unavailable.
+                </p>
+              </>
             )}
-            <BookingModal
-              isOpen={isBookingModalOpen}
-              onClose={() => setIsBookingModalOpen(false)}
-              room={room}
-            />
           </div>
         </div>
       </div>
