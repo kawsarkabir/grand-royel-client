@@ -2,10 +2,10 @@ import { Button } from '@/components/ui/button';
 import { BrushCleaningIcon, CheckCircle, Smile, Star } from 'lucide-react';
 import { Link } from 'react-router';
 import { HeroSlider } from './components/HeroSlider';
-import { HotelMap } from './components/HotelMap';
-import { SpecialOffersModal } from './components/SpecialOffersModal';
+ import { SpecialOffersModal } from './components/SpecialOffersModal';
 import { FeaturedRooms } from './components/FeaturedRooms';
 import { UserReviewsCarousel } from './components/UserReview';
+import HotelMap from './components/HotelMap';
 
 export default function Home() {
   return (

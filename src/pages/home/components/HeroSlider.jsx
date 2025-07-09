@@ -73,7 +73,7 @@ export function HeroSlider() {
               <p className="text-base md:text-lg lg:text-xl">
                 {slide.description}
               </p>
-              <Link href={slide.buttonLink}>
+              <Link to={slide.buttonLink}>
                 <Button size="lg" className="mt-6">
                   {slide.buttonText}
                 </Button>

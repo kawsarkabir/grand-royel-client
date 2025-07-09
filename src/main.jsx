@@ -5,6 +5,8 @@ import { Toaster } from 'sonner';
 import { RouterProvider } from 'react-router';
 import { router } from './routes/routes';
 import './index.css';
+import 'leaflet/dist/leaflet.css';
+
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
 const queryClient = new QueryClient();
