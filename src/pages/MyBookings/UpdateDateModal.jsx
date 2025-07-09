@@ -16,6 +16,7 @@ import moment from 'moment';
 import axios from 'axios';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { toast } from 'sonner';
+import { Separator } from '@/components/ui/separator';
 
 export function UpdateDateModal({ isOpen, onClose, booking }) {
   const [newDate, setNewDate] = useState(moment(booking.bookedDate).toDate());
@@ -63,23 +64,23 @@ export function UpdateDateModal({ isOpen, onClose, booking }) {
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="sm:max-w-[425px]">
-        <DialogHeader>
-          <DialogTitle>Update Booking Date</DialogTitle>
-          <DialogDescription>
-            Select a new date for your booking of{' '}
-            <span className="font-semibold">{booking.roomName}</span>.
-          </DialogDescription>
-        </DialogHeader>
-
-        <div className="grid gap-4 py-4">
-          <div className="grid gap-2">
-            <Label>Current Booking Date:</Label>
-            <p className="font-semibold">
-              {moment(booking.bookedDate).format('MMM DD, YYYY')}
-            </p>
+      <DialogContent className="sm:max-w-[425px] md:max-w-2xl">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+          <div className="space-y-4">
+            <DialogHeader>
+              <DialogTitle>Update Booking Date</DialogTitle>
+              <DialogDescription>
+                Select a new date for your booking of
+                <span className="font-semibold">{booking.roomName}</span>.
+              </DialogDescription>
+            </DialogHeader>
+            <div className="grid gap-2">
+              <Label>Current Booking Date:</Label>
+              <p className="font-semibold">
+                {moment(booking.bookedDate).format('MMM DD, YYYY')}
+              </p>
+            </div>
           </div>
-
           <div className="grid gap-2">
             <Label>Select New Date:</Label>
             <Calendar
@@ -87,7 +88,7 @@ export function UpdateDateModal({ isOpen, onClose, booking }) {
               selected={newDate}
               onSelect={setNewDate}
               initialFocus
-              className="rounded-md border mx-auto"
+              className="rounded-md border w-full"
             />
             {newDate && (
               <p className="text-sm text-muted-foreground text-center mt-2">
@@ -96,10 +97,10 @@ export function UpdateDateModal({ isOpen, onClose, booking }) {
               </p>
             )}
           </div>
-
           {error && <p className="text-sm text-destructive">{error}</p>}
         </div>
 
+        <Separator />
         <DialogFooter>
           <Button variant="outline" onClick={onClose} disabled={isLoading}>
             Cancel

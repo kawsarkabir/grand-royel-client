@@ -11,6 +11,7 @@ import { CancelBookingModal } from './CencelBookingModal';
 import { toast } from 'sonner';
 import LoadingSpinner from '@/components/LoadingSpinner';
 import { Link } from 'react-router';
+import { Button } from '@/components/ui/button';
 
 export default function MyBookingsPage() {
   const { data: bookings = [], isLoading } = useMyBookings();
@@ -98,7 +99,12 @@ export default function MyBookingsPage() {
                   />
                 </td>
                 <td className="p-3 font-medium">
-                  <Link to={`/rooms/${booking.roomId}`} className='hover:underline'>{booking.roomName}</Link>
+                  <Link
+                    to={`/rooms/${booking.roomId}`}
+                    className="hover:underline"
+                  >
+                    {booking.roomName}
+                  </Link>
                 </td>
                 <td className="p-3">${booking.price}</td>
                 <td className="p-3">
@@ -108,7 +114,7 @@ export default function MyBookingsPage() {
                   <span
                     className={`px-2 py-1 rounded-full text-xs font-semibold ${
                       booking.status === 'confirmed'
-                        ? 'bg-green-100 text-green-700'
+                        ? 'bg-green-100 text-green-500'
                         : 'bg-red-100 text-red-700'
                     }`}
                   >
@@ -116,25 +122,34 @@ export default function MyBookingsPage() {
                   </span>
                 </td>
                 <td className="p-3 text-right space-x-2">
-                  <button
-                    className="text-red-600 hover:underline"
+                  <Button
+                    size={'sm'}
+                    className={
+                      'bg-sky-100 text-sky-500 rounded-full text-xs font-semibold'
+                    }
+                    onClick={() => handleOpenUpdateModal(booking)}
+                  >
+                    Update
+                  </Button>
+                  <Button
+                    className={
+                      'bg-yellow-100 text-yellow-500 rounded-full text-xs font-semibold'
+                    }
+                    size={'sm'}
+                    onClick={() => openReviewModal(booking)}
+                  >
+                    Review
+                  </Button>
+                  <Button
+                    className={
+                      'bg-red-100 text-red-500 rounded-full text-xs font-semibold'
+                    }
+                    size={'sm'}
                     onClick={() => openCancelModal(booking)}
                     disabled={cancelBookingMutation.isLoading}
                   >
                     Cancel
-                  </button>
-                  <button
-                    className="text-yellow-600 hover:underline"
-                    onClick={() => handleOpenUpdateModal(booking)}
-                  >
-                    Update Date
-                  </button>
-                  <button
-                    className="text-blue-600 hover:underline"
-                    onClick={() => openReviewModal(booking)}
-                  >
-                    Review
-                  </button>
+                  </Button>
                 </td>
               </tr>
             ))}
