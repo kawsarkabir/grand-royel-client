@@ -63,6 +63,12 @@ export const AuthProvider = ({ children }) => {
       //   return null;
       // }
 
+      // Get Firebase ID token here
+      const token = await result.user.getIdToken();
+
+      // Save token to localStorage
+      localStorage.setItem('jwt_token', token);
+
       // UPDATE: current user
       setUser(result.user);
       toast.success(`Welcome back, ${result.user.displayName || 'User'}!`);
@@ -78,6 +84,12 @@ export const AuthProvider = ({ children }) => {
   const socialLogin = async (provider) => {
     try {
       const result = await signInWithPopup(auth, provider);
+      // Get Firebase ID token here
+      const token = await result.user.getIdToken();
+
+      // Save token to localStorage
+      localStorage.setItem('jwt_token', token);
+
       setUser(result.user);
       toast.success(`Welcome back, ${result.user.displayName || 'User'}!`);
       return result.user;
@@ -124,10 +136,18 @@ export const AuthProvider = ({ children }) => {
 
   // LISTENER: Auth state listener
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
+    const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
       setUser(currentUser);
       setLoading(false);
+
+      if (currentUser) {
+        const token = await currentUser.getIdToken();
+        localStorage.setItem('jwt_token', token);
+      } else {
+        localStorage.removeItem('jwt_token');
+      }
     });
+
     return () => unsubscribe();
   }, []);
 

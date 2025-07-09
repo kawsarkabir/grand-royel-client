@@ -98,7 +98,7 @@ export default function MyBookingsPage() {
                   />
                 </td>
                 <td className="p-3 font-medium">
-                  <Link to={`rooms/${booking.id}`}>{booking.roomName}</Link>
+                  <Link to={`/rooms/${booking.roomId}`} className='hover:underline'>{booking.roomName}</Link>
                 </td>
                 <td className="p-3">${booking.price}</td>
                 <td className="p-3">

@@ -15,6 +15,7 @@ import { format } from 'date-fns';
 import moment from 'moment';
 import axios from 'axios';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { toast } from 'sonner';
 
 export function UpdateDateModal({ isOpen, onClose, booking }) {
   const [newDate, setNewDate] = useState(moment(booking.bookedDate).toDate());
@@ -33,7 +34,7 @@ export function UpdateDateModal({ isOpen, onClose, booking }) {
     mutationFn: async () => {
       const res = await axios.patch(
         `http://localhost:5000/api/bookings/${booking.id}`,
-        { newDate },
+        { newDate: moment(newDate).format('YYYY-MM-DD') },
         {
           headers: {
             Authorization: `Bearer ${localStorage.getItem('jwt_token')}`,
@@ -44,16 +45,17 @@ export function UpdateDateModal({ isOpen, onClose, booking }) {
     },
     onSuccess: () => {
       queryClient.invalidateQueries(['my-bookings']);
+      toast.success('successfully update your date!');
       onClose();
     },
     onError: () => {
-      setError('Failed to update booking date. Please try again.');
+      toast.error('Failed to update booking date. Please try again!');
     },
   });
 
   const handleUpdate = () => {
     if (!newDate) {
-      setError('Please select a new date.');
+      toast.error('Please select a new date!');
       return;
     }
     mutate();
