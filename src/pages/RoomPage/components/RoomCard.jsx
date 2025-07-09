@@ -46,9 +46,7 @@ export function RoomCard({ room }) {
             {renderStars(room.rating)}
             <span>({room.reviews} reviews)</span>
           </div>
-          <Link to={`/rooms/${room._id}`}>
-            <Button size="sm">View Details</Button>
-          </Link>
+          <Button size="sm">View Details</Button>
         </CardFooter>
       </Card>
     </Link>

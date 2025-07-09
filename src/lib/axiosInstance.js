@@ -1,14 +1,22 @@
+// src/lib/axiosInstance.js
 import axios from 'axios';
+import { getAuth } from 'firebase/auth';
 
 const axiosInstance = axios.create({
-  baseURL: import.meta.env.VITE_API_URL,
-  withCredentials: true, // only if your backend uses cookies or authentication
+  baseURL: 'http://localhost:5000/api',
+  withCredentials: true,
 });
-axiosInstance.interceptors.request.use((config) => {
-  const token = localStorage.getItem('token'); // Or however you store it
-  if (token) {
+
+axiosInstance.interceptors.request.use(async (config) => {
+  const auth = getAuth();
+  const user = auth.currentUser;
+
+  if (user) {
+    const token = await user.getIdToken();
     config.headers.Authorization = `Bearer ${token}`;
   }
+
   return config;
 });
+
 export default axiosInstance;
