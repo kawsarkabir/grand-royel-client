@@ -29,7 +29,7 @@ export function RoomCard({ room }) {
 
   return (
     <Link to={`/rooms/${room?._id}`}>
-      <Card className="flex flex-col overflow-hidden shadow hover:shadow-md transition-shadow duration-300 pt-0">
+      <Card className="flex flex-col overflow-hidden shadow hover:shadow-md transition-shadow duration-300 pt-0 -space-y-3">
         <div className="block relative h-48 w-full overflow-hidden">
           <img
             src={room.images[0] || '/placeholder.svg'}
@@ -37,17 +37,17 @@ export function RoomCard({ room }) {
             className="transition-transform duration-300 hover:scale-105 object-cover"
           />
         </div>
-        <CardHeader className="flex-grow">
+        <CardHeader className="flex-grow px-3">
           <CardTitle className="text-xl font-semibold">{room.name}</CardTitle>
-          <CardDescription className="text-muted-foreground line-clamp-2">
+          <CardDescription className="text-muted-foreground line-clamp-1">
             {room.description}
           </CardDescription>
         </CardHeader>
-        <CardContent className="flex items-center justify-between">
+        <CardContent className="flex items-center justify-between px-3">
           <div className="text-2xl font-bold">${room.price}</div>
           <span className="text-sm text-muted-foreground">/ night</span>
         </CardContent>
-        <CardFooter className="flex items-center justify-between pt-0">
+        <CardFooter className="flex items-center justify-between pt-0 px-3">
           <div className="flex items-center gap-1 text-sm text-muted-foreground">
             {renderStars(rating)}
           </div>
