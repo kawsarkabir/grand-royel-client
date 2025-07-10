@@ -2,11 +2,12 @@ import { asset } from '@/assets/assets';
 import { useAuth } from '@/hooks/useAuth';
 import navLinks from '@/utils/navLinks';
 import { useEffect, useRef, useState } from 'react';
-import { FaBars, FaXmark } from 'react-icons/fa6';
+import { FaBars, FaHotel, FaXmark } from 'react-icons/fa6';
 import { Link, NavLink } from 'react-router';
 import { Tooltip, TooltipContent, TooltipTrigger } from './ui/tooltip';
 import { Button } from './ui/button';
 import ThemeToggle from './ThemeToggle';
+
 
 export default function Navbar() {
   const [openMenu, setOpenMenu] = useState(false);
@@ -38,15 +39,14 @@ export default function Navbar() {
         {/* Desktop Navbar */}
         <nav className="sticky top-0 z-50">
           <div className="max-w-[1300px] mx-auto px-4 py-3 flex items-center justify-between">
-            <Link to="/" className="flex items-center">
-              <img src={asset.Logo} alt="logo" className="w-10" />
-              <h1 className="text-black dark:text-white text-xl font-semibold">
-                Hotelio
-              </h1>
-            </Link>
-
-
-
+            <div className="flex items-center space-x-2">
+              <div className="bg-primary p-1 rounded">
+                <Link to="/">
+                  <FaHotel className="h-5 w-5 text-primary-foreground" />
+                </Link>
+              </div>
+              <span className="font-bold text-lg">Grand Royal</span>
+            </div>
             <div
               className="hidden md:flex items-center gap-4 relative"
               ref={logoutRef}
@@ -60,8 +60,8 @@ export default function Navbar() {
                         to={item.path}
                         onClick={toggleMenu}
                         className={({ isActive }) =>
-                          `text-lg font-semibold ${isActive
-                            ? 'text-[#52b788]'
+                          `text-md font-semibold ${isActive
+                            ? 'text-primary'
                             : 'text-black dark:text-white'
                           }`
                         }
@@ -125,22 +125,32 @@ export default function Navbar() {
           </div>
         </nav>
 
+
+
+
         {/* Mobile Menu Overlay */}
-        <div
-          className={`fixed inset-0 bg-black/30 z-70 transition-transform duration-300 ${openMenu ? 'translate-x-0' : '-translate-x-full'
-            } md:hidden`}
-          onClick={toggleMenu}
-        >
+        <div className={`fixed inset-0 z-50 md:hidden transition duration-300 ${openMenu ? 'opacity-100 visible' : 'opacity-0 invisible'}`}>
           <div
-            className="w-[60vw] h-full bg-white p-6"
+            className={`absolute inset-0 bg-black/50 transition-opacity duration-300`}
+            onClick={toggleMenu}
+          />
+
+          {/* Sidebar panel */}
+          <div
+            className={`absolute left-0 top-0 h-[100vh] w-[60vw] max-w-sm bg-slate-100 shadow-lg transform transition-transform duration-300 ease-in-out ${openMenu ? 'translate-x-0' : '-translate-x-full'
+              }`}
             onClick={(e) => e.stopPropagation()}
           >
-            <Link to="/" className="flex items-center gap-3 mb-8">
-              <img src={asset.Logo} alt="logo" className="w-14" />
-              <h1 className="text-xl font-bold">Hotelio</h1>
-            </Link>
+            <div className="flex items-center space-x-2 mb-6 p-4 border-b">
+              <div className="bg-primary p-1 rounded">
+                <Link to="/">
+                  <FaHotel className="h-5 w-5 text-primary-foreground" />
+                </Link>
+              </div>
+              <span className="font-bold text-lg">Grand Royal</span>
+            </div>
 
-            <ul className="flex flex-col gap-6">
+            <ul className="flex flex-col gap-6 px-4">
               {navLinks
                 .filter((item) => !item.private || (item.private && user))
                 .map((item) => (
@@ -149,7 +159,8 @@ export default function Navbar() {
                       to={item.path}
                       onClick={toggleMenu}
                       className={({ isActive }) =>
-                        `text-lg font-semibold ${isActive ? 'text-[#52b788]' : ''}`
+                        `block text-lg font-semibold py-1 ${isActive ? 'text-primary' : 'text-foreground'
+                        }`
                       }
                     >
                       {item.name}
@@ -168,6 +179,8 @@ export default function Navbar() {
             </ul>
           </div>
         </div>
+
+
       </div>
     </header>
   );

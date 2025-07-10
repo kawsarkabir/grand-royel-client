@@ -26,7 +26,7 @@ const navLinks = [
     id: 5,
   },
   {
-    name: 'SignIn',
+    name: 'Login',
     path: '/signin',
     id: 6,
   },
