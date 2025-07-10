@@ -2,7 +2,7 @@ import { Button } from '@/components/ui/button';
 import { BrushCleaningIcon, CheckCircle, Smile, Star } from 'lucide-react';
 import { Link } from 'react-router';
 import { HeroSlider } from './components/HeroSlider';
- import { SpecialOffersModal } from './components/SpecialOffersModal';
+import { SpecialOffersModal } from './components/SpecialOffersModal';
 import { FeaturedRooms } from './components/FeaturedRooms';
 import { UserReviewsCarousel } from './components/UserReview';
 import HotelMap from './components/HotelMap';
@@ -16,7 +16,7 @@ export default function Home() {
         <div className="container px-4 md:px-6 mx-auto">
           <div className="grid gap-8 lg:grid-cols-2 lg:gap-12 items-center">
             <div className="space-y-4">
-              <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl">
+              <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-4xl">
                 Discover Our Exceptional Amenities
               </h2>
               <p className="max-w-[700px] text-muted-foreground md:text-xl/relaxed">
@@ -42,12 +42,12 @@ export default function Home() {
                   Sparkling Outdoor Pool
                 </li>
               </ul>
-              <Link href="/rooms">
+              <Link to="/rooms">
                 <Button size="lg">Explore Rooms</Button>
               </Link>
             </div>
             <img
-              src="/placeholder.svg?height=500&width=700"
+              src="https://image.pollinations.ai/prompt/Discover%20Our%20Exceptional%20Amenities?width=1024&height=1024&seed=31321&model=flux"
               width={700}
               height={500}
               alt="Hotel Amenities"

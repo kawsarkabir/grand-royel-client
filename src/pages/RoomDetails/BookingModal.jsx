@@ -44,7 +44,7 @@ export function BookingModal({ isOpen, onClose, room, onBookingSuccess }) {
         date: selectedDate.toISOString().split('T')[0],
         guests: parseInt(numberOfGuests),
         roomName: room.name,
-        roomImage: room.image || '/placeholder.jpg',
+        roomImage: room.images[0] || '/placeholder.jpg',
         roomPrice: room.price,
       });
 

@@ -6,7 +6,8 @@ import { Link } from 'react-router';
 const slides = [
   {
     id: 1,
-    image: '/placeholder.svg?height=800&width=1600',
+    image:
+      'https://image.pollinations.ai/prompt/Your%20Dream%20Getaway%20Awaits?width=1600&height=800&seed=17797&model=flux',
     title: 'Your Dream Getaway Awaits',
     description:
       'Experience unparalleled luxury and comfort in the heart of the city. Book your perfect stay with us.',
@@ -15,7 +16,8 @@ const slides = [
   },
   {
     id: 2,
-    image: '/placeholder.svg?height=800&width=1600',
+    image:
+      'https://image.pollinations.ai/prompt/Indulge%20in%20Serenity?width=1600&height=800&seed=13708&model=flux',
     title: 'Indulge in Serenity',
     description:
       'Escape the everyday and immerse yourself in tranquility. Our serene rooms offer the ultimate relaxation.',
@@ -24,7 +26,8 @@ const slides = [
   },
   {
     id: 3,
-    image: '/placeholder.svg?height=800&width=1600',
+    image:
+      'https://image.pollinations.ai/prompt/Adventure%20at%20Your%20Doorstep?width=1600&height=800&seed=79250&model=flux',
     title: 'Adventure at Your Doorstep',
     description:
       'Located near vibrant attractions, our hotel is the perfect base for your next adventure.',

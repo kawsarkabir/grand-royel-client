@@ -26,7 +26,7 @@ export function SpecialOffersModal() {
       <DialogContent className="sm:max-w-[425px] p-0 overflow-hidden rounded-lg">
         <div className="relative h-48 w-full">
           <img
-            src="/placeholder.svg?height=200&width=400"
+            src="https://image.pollinations.ai/prompt/Special%20Offer%20Exclusive%20Summer%20Deal!%20Use%20code:%20SUMMER30%20make%20atractive%20promotional%20thamnail?width=400&height=200&seed=36137&model=flux"
             alt="Special Offer"
             className="rounded-t-lg object-cover"
           />
@@ -54,7 +54,7 @@ export function SpecialOffersModal() {
           <p>Valid for bookings made before August 31st, 2024.</p>
         </div>
         <DialogFooter className="p-6 pt-0 items-center justify-between">
-          <div className='w-full'>
+          <div className="w-full">
             <Link to="/rooms" className="pt-0">
               <Button onClick={() => setIsOpen(false)}>Book Now</Button>
             </Link>

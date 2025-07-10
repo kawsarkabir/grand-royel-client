@@ -35,7 +35,7 @@ export function FeaturedRooms() {
         <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl mb-8">
           Our Featured Rooms
         </h2>
-        <p className="max-w-[700px] mx-auto text-muted-foreground md:text-xl/relaxed mb-12">
+        <p className="max-w-[700px] mx-auto text-muted-foreground md:text-xl/relaxed mb-12 text-center">
           Discover our most popular and highly-rated rooms, designed for your
           ultimate comfort and luxury.
         </p>
@@ -43,7 +43,7 @@ export function FeaturedRooms() {
           {rooms.map((room) => (
             <Card
               key={room._id}
-              className="flex flex-col overflow-hidden shadow hover:shadow-md transition-shadow duration-300"
+              className="flex flex-col overflow-hidden shadow hover:shadow-md transition-shadow duration-300 pt-0"
             >
               <Link
                 to={`/rooms/${room._id}`}
