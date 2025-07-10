@@ -4,18 +4,18 @@ import Story from "./components/Story";
 import Mission from "./components/Mission";
 import Amenities from "./components/Amenities";
 import CTA from "./components/CTA";
+import { Title } from "react-head";
 
-const About = () => {
+export default function Home() {
     return (
-        <div >
+        <>
+            <Title> Grand Royel | About </Title>
             <AboutHero />
             <Stats />
             <Story />
             <Mission />
             <Amenities />
             <CTA />
-        </div>
+        </>
     );
 };
-
-export default About;

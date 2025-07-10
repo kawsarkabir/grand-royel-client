@@ -12,6 +12,7 @@ import { toast } from 'sonner';
 import LoadingSpinner from '@/components/LoadingSpinner';
 import { Link } from 'react-router';
 import { Button } from '@/components/ui/button';
+import { Title } from 'react-head';
 
 export default function MyBookingsPage() {
   const { data: bookings = [], isLoading } = useMyBookings();
@@ -75,7 +76,7 @@ export default function MyBookingsPage() {
   return (
     <div className="container mx-auto px-4 py-12">
       <h1 className="text-3xl font-bold mb-8">My Bookings</h1>
-
+      <Title> Grand Royel | My Bookings </Title>
       <div className="overflow-x-auto">
         <table className="w-full table-auto border border-gray-200 shadow-sm">
           <thead className="bg-gray-100 text-left">
@@ -112,11 +113,10 @@ export default function MyBookingsPage() {
                 </td>
                 <td className="p-3">
                   <span
-                    className={`px-2 py-1 rounded-full text-xs font-semibold ${
-                      booking.status === 'confirmed'
+                    className={`px-2 py-1 rounded-full text-xs font-semibold ${booking.status === 'confirmed'
                         ? 'bg-green-100 text-green-500'
                         : 'bg-red-100 text-red-700'
-                    }`}
+                      }`}
                   >
                     {booking.status}
                   </span>

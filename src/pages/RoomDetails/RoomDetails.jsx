@@ -17,6 +17,7 @@ import { BookingModal } from './BookingModal';
 import { RoomReviews } from './RoomReviews';
 import { iconMap } from '@/utils/iconMap';
 import { useQueryClient } from '@tanstack/react-query';
+import { Title } from 'react-head';
 
 export default function RoomDetailsPage() {
   const queryClient = useQueryClient();
@@ -40,6 +41,7 @@ export default function RoomDetailsPage() {
 
   return (
     <div className="container px-4 md:px-6 py-8 md:py-12 lg:py-16 mx-auto">
+      <Title>{`Grand Royel | ${room.name}`}</Title>
       <div className="grid gap-8 lg:grid-cols-[2fr_1fr] items-start">
         {/* Left Column */}
         <div className="grid gap-8">

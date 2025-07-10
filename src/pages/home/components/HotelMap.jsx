@@ -16,7 +16,7 @@ export default function HotelMap() {
   const position = [-37.814, 144.9631]; // Melbourne example
 
   return (
-    <section className="py-12 md:py-24 lg:py-32 bg-muted">
+    <section className="py-12 lg:py-16">
       <div className="container px-4 md:px-6 text-center mx-auto">
         <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl mb-8">
           Find Us Here
@@ -26,7 +26,7 @@ export default function HotelMap() {
           stunning views.
         </p>
 
-        <div className="relative w-full h-[400px] md:h-[500px] lg:h-[400px] rounded-xl overflow-hidden shadow-lg">
+        <div className="relative w-full h-[400px] md:h-[500px] lg:h-[400px] rounded overflow-hidden shadow">
           <MapContainer
             center={position}
             zoom={13}

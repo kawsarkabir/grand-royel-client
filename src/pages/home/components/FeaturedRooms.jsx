@@ -12,6 +12,7 @@ import { Star } from 'lucide-react';
 import { Link } from 'react-router';
 import axiosInstance from '@/lib/axiosInstance';
 import { toast } from 'sonner';
+import { motion } from 'framer-motion';
 
 export function FeaturedRooms() {
   const [rooms, setRooms] = useState([]);
@@ -20,7 +21,14 @@ export function FeaturedRooms() {
     const fetchRooms = async () => {
       try {
         const res = await axiosInstance.get('/rooms');
-        setRooms(res.data.slice(0, 6));
+        const sorted = res.data
+          //  / Optional: show only available rooms
+          .sort((a, b) => {
+            const scoreA = a.rating * a.totalReviews;
+            const scoreB = b.rating * b.totalReviews;
+            return scoreB - scoreA;
+          }) // Sort by rating descending
+        setRooms(sorted.slice(0, 6)); // Top 6
       } catch (error) {
         toast.error('Failed to fetch featured rooms:', error);
       }
@@ -28,6 +36,15 @@ export function FeaturedRooms() {
 
     fetchRooms();
   }, []);
+
+  const renderStars = (rating) => {
+    return Array.from({ length: 5 }, (_, i) => (
+      <Star
+        key={i}
+        className={`h-5 w-5 ${i < rating ? 'fill-yellow-400 text-yellow-400' : 'text-muted-foreground'}`}
+      />
+    ));
+  };
 
   return (
     <section className="py-12 md:py-24 lg:py-32">
@@ -41,47 +58,51 @@ export function FeaturedRooms() {
         </p>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
           {rooms.map((room) => (
-            <Card
-              key={room._id}
-              className="flex flex-col overflow-hidden shadow hover:shadow-md transition-shadow duration-300 pt-0"
-            >
-              <Link
-                to={`/rooms/${room._id}`}
-                className="block relative h-48 w-full overflow-hidden"
+            <motion.div initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.4 }} key={room._id}>
+              <Card
+                className="flex flex-col overflow-hidden shadow hover:shadow-md transition-shadow duration-300 pt-0"
               >
-                <img
-                  src={room.images?.[0] || '/placeholder.svg'}
-                  alt={room.name}
-                  className="transition-transform duration-300 hover:scale-105 object-cover w-full h-full"
-                />
-              </Link>
-              <CardHeader className="flex-grow">
-                <CardTitle className="text-xl font-semibold">
-                  {room.name}
-                </CardTitle>
-                <CardDescription className="text-muted-foreground line-clamp-2">
-                  {room.description}
-                </CardDescription>
-              </CardHeader>
-              <CardContent className="flex items-center justify-between">
-                <div className="text-2xl font-bold">${room.price}</div>
-                <span className="text-sm text-muted-foreground">/ night</span>
-              </CardContent>
-              <CardFooter className="flex items-center justify-between pt-0">
-                <div className="flex items-center gap-1 text-sm text-muted-foreground">
-                  <Star className="h-4 w-4 fill-yellow-400 text-yellow-400" />
-                  <span>
-                    {room.rating || 0} ({room.totalReviews || 0} reviews)
-                  </span>
-                </div>
-                <Link to={`/rooms/${room._id}`}>
-                  <Button size="sm">Book Now</Button>
+                <Link
+                  to={`/rooms/${room._id}`}
+                  className="block relative h-48 w-full overflow-hidden"
+                >
+                  <img
+                    src={room.images?.[0] || '/placeholder.svg'}
+                    alt={room.name}
+                    className="transition-transform duration-300 hover:scale-105 object-cover w-full h-full"
+                  />
                 </Link>
-              </CardFooter>
-            </Card>
+                <CardHeader className="flex-grow">
+                  <CardTitle className="text-xl font-semibold">
+                    {room.name}
+                  </CardTitle>
+                  <CardDescription className="text-muted-foreground line-clamp-2">
+                    {room.description}
+                  </CardDescription>
+                </CardHeader>
+                <CardContent className="flex items-center justify-between">
+                  <div className="text-2xl font-bold">${room.price}</div>
+                  <span className="text-sm text-muted-foreground">/ night</span>
+                </CardContent>
+                <CardFooter className="flex items-center justify-between pt-0">
+                  <div className="flex items-center gap-1 text-sm text-muted-foreground">
+                    <div className="flex items-center">
+                      {renderStars(room.rating)}
+                    </div>
+                    <span className="ml-2">({room.totalReviews || 0} reviews)</span>
+                  </div>
+                  <Link to={`/rooms/${room._id}`}>
+                    <Button size="sm">Book Now</Button>
+                  </Link>
+                </CardFooter>
+              </Card>
+            </motion.div>
           ))}
         </div>
       </div>
-    </section>
+    </section >
   );
 }

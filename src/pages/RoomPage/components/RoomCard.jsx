@@ -9,6 +9,7 @@ import {
   CardTitle,
 } from '@/components/ui/card';
 import { Star } from 'lucide-react';
+import { Title } from 'react-head';
 import { Link } from 'react-router';
 
 export function RoomCard({ room }) {
@@ -18,17 +19,19 @@ export function RoomCard({ room }) {
     return Array.from({ length: 5 }, (_, i) => (
       <Star
         key={i}
-        className={`h-4 w-4 ${
-          i < rating
-            ? 'fill-yellow-400 text-yellow-400'
-            : 'text-muted-foreground'
-        }`}
+        className={`h-4 w-4 ${i < rating
+          ? 'fill-yellow-400 text-yellow-400'
+          : 'text-muted-foreground'
+          }`}
       />
     ));
   };
 
   return (
     <Link to={`/rooms/${room?._id}`}>
+
+      <Title>Grand Royel | Rooms</Title>
+
       <Card className="flex flex-col overflow-hidden shadow hover:shadow-md transition-shadow duration-300 pt-0 -space-y-3">
         <div className="block relative h-48 w-full overflow-hidden">
           <img

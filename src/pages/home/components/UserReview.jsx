@@ -26,14 +26,14 @@ export function UserReviewsCarousel() {
 
   if (reviews.length === 0) {
     return (
-      <section className="py-24 text-center">
+      <section className="pb-16 text-center">
         <p className="text-lg text-muted-foreground">No reviews available yet.</p>
       </section>
     );
   }
 
   return (
-    <section className="py-12 md:py-24 bg-background relative overflow-hidden">
+    <section className="py-12 bg-background relative overflow-hidden">
       <div className="container px-4 md:px-6 text-center mb-12">
         <h2 className="text-3xl font-bold tracking-tight sm:text-4xl md:text-5xl mb-4">
           What Our Guests Say
