@@ -50,7 +50,7 @@ export function UserReviewsCarousel() {
       {/* Marquee Line 1 - Left to Right */}
       <Marquee
         gradient={true}
-        speed={45}
+        speed={90}
         pauseOnHover
         className="mb-3"
         direction="left"
@@ -64,7 +64,7 @@ export function UserReviewsCarousel() {
       {/* Marquee Line 2 - Right to Left */}
       <Marquee
         gradient={true}
-        speed={35}
+        speed={50}
         pauseOnHover
         direction="right"
         loop={90}
@@ -88,7 +88,7 @@ function ReviewCard({ review }) {
             {review.username?.charAt(0).toUpperCase() || 'U'}
           </AvatarFallback>
         </Avatar>
-        <p className="text-sm italic text-foreground line-clamp-4">
+        <p className="text-sm italic text-foreground line-clamp-3">
           &quot;{review.comment}&quot;
         </p>
         <p className="font-semibold text-primary">- {review.username}</p>

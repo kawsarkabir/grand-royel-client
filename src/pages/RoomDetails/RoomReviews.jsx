@@ -28,7 +28,7 @@ export function RoomReviews({ reviews }) {
         <article key={review._id} className="grid gap-3">
           <div className="flex items-center gap-4">
             <Avatar className="h-10 w-10 border">
-              <AvatarImage src="/placeholder-user.jpg" alt={review.userEmail} />
+              <AvatarImage src={review.photoURL} alt={review.userEmail} />
               <AvatarFallback>
                 {review.userEmail?.charAt(0).toUpperCase()}
               </AvatarFallback>

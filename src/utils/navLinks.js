@@ -25,10 +25,5 @@ const navLinks = [
     path: '/contact',
     id: 5,
   },
-  {
-    name: 'Login',
-    path: '/signin',
-    id: 6,
-  },
 ];
 export default navLinks;

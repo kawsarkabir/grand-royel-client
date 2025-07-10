@@ -1,11 +1,12 @@
 import { Button } from '@/components/ui/button';
-import { BrushCleaningIcon, CheckCircle, Smile, Star } from 'lucide-react';
+import { BrushCleaningIcon, CheckCircle, Smile, } from 'lucide-react';
 import { Link } from 'react-router';
 import { HeroSlider } from './components/HeroSlider';
 import { SpecialOffersModal } from './components/SpecialOffersModal';
 import { FeaturedRooms } from './components/FeaturedRooms';
 import { UserReviewsCarousel } from './components/UserReview';
 import HotelMap from './components/HotelMap';
+import { FaStar } from 'react-icons/fa';
 
 export default function Home() {
   return (
@@ -71,7 +72,7 @@ export default function Home() {
           </div>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mt-12">
             <div className="flex flex-col items-center space-y-4 p-6 bg-card rounded-lg shadow-sm">
-              <Star className="h-12 w-12 text-primary" />
+              <FaStar className="h-12 w-12 text-primary" />
               <h3 className="text-xl font-semibold">5-Star Service</h3>
               <p className="text-muted-foreground text-center">
                 Experience world-class hospitality from our dedicated staff,
