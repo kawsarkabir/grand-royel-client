@@ -5,18 +5,10 @@ import { RoomFilter } from './components/RoomFilter';
 import LoadingSpinner from '@/components/LoadingSpinner';
 
 export default function RoomsPage() {
-  const [minPrice, setMinPrice] = useState(50);
-  const [maxPrice, setMaxPrice] = useState(1000);
-  const [filterApplied, setFilterApplied] = useState(false);
+  const [minPrice, setMinPrice] = useState(0);
+  const [maxPrice, setMaxPrice] = useState(1500);
 
-  const {
-    data: rooms,
-    isLoading,
-    error,
-  } = useRooms({
-    minPrice: filterApplied ? minPrice : null,
-    maxPrice: filterApplied ? maxPrice : null,
-  });
+  const { data: rooms, isLoading, error } = useRooms({ minPrice, maxPrice });
 
   if (isLoading) return <LoadingSpinner />;
   if (error) return <div>Error fetching rooms</div>;
@@ -30,7 +22,6 @@ export default function RoomsPage() {
             maxPrice={maxPrice}
             setMinPrice={setMinPrice}
             setMaxPrice={setMaxPrice}
-            onApplyFilter={() => setFilterApplied(true)}
           />
         </aside>
         <section className="flex-1">

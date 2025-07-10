@@ -1,17 +1,10 @@
 /* eslint-disable react/prop-types */
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Label } from '@/components/ui/label';
-import { Input } from '@/components/ui/input';
-import { Button } from '@/components/ui/button';
-import { Slider } from '@/components/ui/slider';
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Slider } from "@/components/ui/slider";
 
-export function RoomFilter({
-  minPrice,
-  maxPrice,
-  setMinPrice,
-  setMaxPrice,
-  onApplyFilter,
-}) {
+export function RoomFilter({ minPrice, maxPrice, setMinPrice, setMaxPrice }) {
   return (
     <Card className="sticky top-20">
       <CardHeader>
@@ -45,16 +38,13 @@ export function RoomFilter({
             max={1500}
             step={10}
             value={[minPrice, maxPrice]}
-            onValueChange={(value) => {
-              setMinPrice(value[0]);
-              setMaxPrice(value[1]);
+            onValueChange={([min, max]) => {
+              setMinPrice(min);
+              setMaxPrice(max);
             }}
             className="mt-4"
           />
         </div>
-        <Button onClick={onApplyFilter} className="w-full">
-          Apply Filters
-        </Button>
       </CardContent>
     </Card>
   );
