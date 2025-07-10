@@ -3,12 +3,24 @@ import { useRooms } from '@/hooks/useRooms';
 import { RoomCard } from './components/RoomCard';
 import { RoomFilter } from './components/RoomFilter';
 import LoadingSpinner from '@/components/LoadingSpinner';
+import { useDebounce } from 'use-debounce';
 
 export default function RoomsPage() {
   const [minPrice, setMinPrice] = useState(0);
   const [maxPrice, setMaxPrice] = useState(1500);
 
-  const { data: rooms, isLoading, error } = useRooms({ minPrice, maxPrice });
+  // Wait 400ms after last change
+  const [debouncedMin] = useDebounce(minPrice, 400);
+  const [debouncedMax] = useDebounce(maxPrice, 400);
+
+  const {
+    data: rooms,
+    isLoading,
+    error,
+  } = useRooms({
+    minPrice: debouncedMin,
+    maxPrice: debouncedMax,
+  });
 
   if (isLoading) return <LoadingSpinner />;
   if (error) return <div>Error fetching rooms</div>;

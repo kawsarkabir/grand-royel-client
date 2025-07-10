@@ -12,11 +12,19 @@ import { Star } from 'lucide-react';
 import { Link } from 'react-router';
 
 export function RoomCard({ room }) {
+  // Use room.rating if valid number, else 0
+  const rating = typeof room.rating === 'number' ? room.rating : 0;
+  const reviewsCount = typeof room.reviews === 'number' ? room.reviews : 0;
+
   const renderStars = (rating) => {
     return Array.from({ length: 5 }, (_, i) => (
       <Star
         key={i}
-        className={`h-4 w-4 ${i < rating ? 'fill-yellow-400 text-yellow-400' : 'text-muted-foreground'}`}
+        className={`h-4 w-4 ${
+          i < rating
+            ? 'fill-yellow-400 text-yellow-400'
+            : 'text-muted-foreground'
+        }`}
       />
     ));
   };
@@ -43,8 +51,8 @@ export function RoomCard({ room }) {
         </CardContent>
         <CardFooter className="flex items-center justify-between pt-0">
           <div className="flex items-center gap-1 text-sm text-muted-foreground">
-            {renderStars(room.rating)}
-            <span>({room.reviews} reviews)</span>
+            {renderStars(rating)}
+            <span>({reviewsCount} reviews)</span>
           </div>
           <Button size="sm">View Details</Button>
         </CardFooter>
