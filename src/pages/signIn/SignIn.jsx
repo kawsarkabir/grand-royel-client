@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useNavigate, Link } from 'react-router';
+import { useNavigate, Link, useLocation } from 'react-router';
 import { GoogleAuthProvider, GithubAuthProvider } from 'firebase/auth';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -10,6 +10,7 @@ import { useAuth } from '@/hooks/useAuth';
 
 export default function SignIn() {
   const navigate = useNavigate();
+  const location = useLocation();
   const [loading, setLoading] = useState(false);
   const [showPass, setShowPass] = useState(false);
   const { signInUser, socialLogin, resetPassword } = useAuth();
@@ -28,7 +29,7 @@ export default function SignIn() {
     try {
       const signedInUser = await signInUser(email, password);
       if (!signedInUser) return;
-      navigate('/');
+      navigate(`${location.state ? location.state : '/'}`);
     } catch {
       // ERROR: handle by contex
     } finally {

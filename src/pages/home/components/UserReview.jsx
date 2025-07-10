@@ -4,6 +4,7 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import axiosInstance from '@/lib/axiosInstance';
+import { toast } from 'sonner';
 
 export function UserReviewsCarousel() {
   const [reviews, setReviews] = useState([]);
@@ -12,13 +13,13 @@ export function UserReviewsCarousel() {
   useEffect(() => {
     const fetchReviews = async () => {
       try {
-        const res = await axiosInstance.get('/reviews'); // ✅ Adjust this if your route is different
+        const res = await axiosInstance.get('/reviews');
         const sorted = res.data.sort(
           (a, b) => new Date(b.createdAt) - new Date(a.createdAt),
         );
         setReviews(sorted);
       } catch (error) {
-        console.error('Failed to fetch reviews:', error);
+        toast.error('Failed to fetch reviews:', error);
       }
     };
 

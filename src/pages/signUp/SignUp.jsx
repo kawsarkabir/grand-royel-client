@@ -47,7 +47,7 @@ export default function SignUp() {
 
     try {
       await signUpUser(email, password, name, photoURL);
-      navigate('/signin');
+      navigate('/');
     } catch {
       // ERROR: handle by contex
     } finally {
