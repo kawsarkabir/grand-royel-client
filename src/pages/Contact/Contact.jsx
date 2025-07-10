@@ -1,7 +1,16 @@
-export default function Contact(){
+import ContactHero from "./components/ContactHero";
+import QuickContact from "./components/QuickContact";
+import ContactFAQ from "./components/ContactFAQ";
+import ContactForm from "./components/ContactForm";
+
+export default function Contact() {
     return (
-         <>
-            <h1>contact</h1>
-         </>
+        <div className="bg-background">
+            <ContactHero />
+            <QuickContact />
+            <ContactForm />
+            <ContactFAQ />
+        </div>
     );
-}
+};
+
