@@ -5,20 +5,30 @@ const navLinks = [
     id: 1,
   },
   {
-    name: 'SignIn',
-    path: '/signin',
+    name: 'About',
+    path: '/about',
     id: 2,
   },
   {
     name: 'Rooms',
     path: '/rooms',
-    id: 5,
+    id: 3,
   },
   {
     name: 'My Bookings',
     path: '/my-bookings',
-    id: 6,
+    id: 4,
     private: true,
+  },
+  {
+    name: 'Contact',
+    path: '/contact',
+    id: 5,
+  },
+  {
+    name: 'SignIn',
+    path: '/signin',
+    id: 6,
   },
 ];
 export default navLinks;

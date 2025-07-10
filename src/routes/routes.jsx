@@ -9,6 +9,8 @@ import NotFoundPage from '@/pages/NotFound/NotFound';
 import MyBookings from '@/pages/MyBookings/MyBookings';
 import RoomsPage from '@/pages/RoomPage/Room';
 import RoomDetailsPage from '@/pages/RoomDetails/RoomDetails';
+import About from '@/pages/About/About';
+import Contact from '@/pages/Contact/Contact';
 
 export const router = createBrowserRouter([
   {
@@ -25,6 +27,15 @@ export const router = createBrowserRouter([
         element: <RoomsPage />,
       },
       {
+        path: "/about",
+        element: <About />
+      },
+      {
+        path: "/contact",
+        element: <Contact />
+      },
+      // private routes
+      {
         path: '/rooms/:id',
         element: (
           <PrivateRoute>
@@ -32,7 +43,6 @@ export const router = createBrowserRouter([
           </PrivateRoute>
         ),
       },
-      // private routes
       {
         path: '/my-bookings',
         element: (

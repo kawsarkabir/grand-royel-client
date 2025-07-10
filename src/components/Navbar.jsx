@@ -45,32 +45,32 @@ export default function Navbar() {
               </h1>
             </Link>
 
-            <ul className="hidden md:flex items-center gap-6">
-              {navLinks
-                .filter((item) => !item.private || (item.private && user))
-                .map((item) => (
-                  <li key={item.id}>
-                    <NavLink
-                      to={item.path}
-                      onClick={toggleMenu}
-                      className={({ isActive }) =>
-                        `text-lg font-semibold ${
-                          isActive
-                            ? 'text-[#52b788]'
-                            : 'text-black dark:text-white'
-                        }`
-                      }
-                    >
-                      {item.name}
-                    </NavLink>
-                  </li>
-                ))}
-            </ul>
+
 
             <div
               className="hidden md:flex items-center gap-4 relative"
               ref={logoutRef}
             >
+              <ul className="hidden md:flex items-center gap-6">
+                {navLinks
+                  .filter((item) => !item.private || (item.private && user))
+                  .map((item) => (
+                    <li key={item.id}>
+                      <NavLink
+                        to={item.path}
+                        onClick={toggleMenu}
+                        className={({ isActive }) =>
+                          `text-lg font-semibold ${isActive
+                            ? 'text-[#52b788]'
+                            : 'text-black dark:text-white'
+                          }`
+                        }
+                      >
+                        {item.name}
+                      </NavLink>
+                    </li>
+                  ))}
+              </ul>
               {user ? (
                 <>
                   <Tooltip>
@@ -127,9 +127,8 @@ export default function Navbar() {
 
         {/* Mobile Menu Overlay */}
         <div
-          className={`fixed inset-0 bg-black/30 z-70 transition-transform duration-300 ${
-            openMenu ? 'translate-x-0' : '-translate-x-full'
-          } md:hidden`}
+          className={`fixed inset-0 bg-black/30 z-70 transition-transform duration-300 ${openMenu ? 'translate-x-0' : '-translate-x-full'
+            } md:hidden`}
           onClick={toggleMenu}
         >
           <div
