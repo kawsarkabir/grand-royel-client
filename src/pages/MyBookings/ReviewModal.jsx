@@ -43,6 +43,7 @@ export function ReviewModal({ isOpen, onClose, booking }) {
         bookingId: booking.id,
         userId: user.id,
         username: user?.displayName,
+        photoURL: user.photoURL,
         rating,
         comment,
         timestamp: new Date().toISOString(),
