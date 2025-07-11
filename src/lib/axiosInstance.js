@@ -3,7 +3,7 @@ import axios from 'axios';
 import { getAuth } from 'firebase/auth';
 
 const axiosInstance = axios.create({
-  baseURL: 'http://localhost:5000/api',
+  baseURL: 'https://grand-royel-server.vercel.app/api',
   withCredentials: true,
 });
 

@@ -1,5 +1,5 @@
 import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
- import L from 'leaflet';
+import L from 'leaflet';
 
 // Fix Leaflet marker icon issue
 delete L.Icon.Default.prototype._getIconUrl;
@@ -13,7 +13,7 @@ L.Icon.Default.mergeOptions({
 });
 
 export default function HotelMap() {
-  const position = [-37.814, 144.9631]; // Melbourne example
+  const position = [-37.814, 144.9631];
 
   return (
     <section className="py-12 lg:py-16">

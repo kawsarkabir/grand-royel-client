@@ -1,6 +1,6 @@
 import { FaStar } from 'react-icons/fa6';
 import { Smile } from 'lucide-react';
-import { BrushCleaningIcon } from 'lucide-react'; // assuming this is a custom or valid icon
+import { BrushCleaningIcon } from 'lucide-react';
 import { motion } from 'framer-motion';
 
 const fadeUp = {
