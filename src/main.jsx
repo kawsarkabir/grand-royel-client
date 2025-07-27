@@ -19,7 +19,7 @@ createRoot(document.getElementById('root')).render(
           <Toaster richColors position="top-right" />
           <RouterProvider router={router} />
         </AuthProvider>
-      </QueryClientProvider>,
+      </QueryClientProvider>
     </HeadProvider>
-  </StrictMode>,
+  </StrictMode>
 );
