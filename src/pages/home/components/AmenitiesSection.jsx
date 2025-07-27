@@ -3,22 +3,57 @@ import { Button } from '@/components/ui/button';
 import { Link } from 'react-router';
 import { motion } from 'framer-motion';
 
-const fadeUp = {
-    hidden: { opacity: 0, y: 30 },
+const slideIn = {
+    hidden: {
+        opacity: 0,
+        x: -100,
+        transition: {
+            type: 'spring',
+            stiffness: 100,
+            damping: 20
+        }
+    },
     visible: (i = 0) => ({
         opacity: 1,
-        y: 0,
+        x: 0,
         transition: {
             delay: i * 0.2,
-            duration: 0.6,
-            ease: 'easeOut',
-        },
-    }),
+            type: 'spring',
+            stiffness: 100,
+            damping: 20,
+            mass: 1,
+            velocity: 50
+        }
+    })
+};
+
+const slideInRight = {
+    hidden: {
+        opacity: 0,
+        x: 100,
+        transition: {
+            type: 'spring',
+            stiffness: 100,
+            damping: 20
+        }
+    },
+    visible: {
+        opacity: 1,
+        x: 0,
+        transition: {
+            delay: 0.4,
+            type: 'spring',
+            stiffness: 100,
+            damping: 20,
+            mass: 1,
+            velocity: 50
+        }
+    }
 };
 
 export default function AmenitiesSection() {
     return (
-        <section className="py-12 lg:pb-16 bg-muted">
+        <section className="py-12 lg:pb-16 bg-muted overflow-x-hidden">
             <div className="container px-4 md:px-6 mx-auto">
                 <div className="grid gap-8 lg:grid-cols-2 lg:gap-12 items-center">
                     <div className="space-y-4">
@@ -26,8 +61,8 @@ export default function AmenitiesSection() {
                             className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-4xl"
                             initial="hidden"
                             whileInView="visible"
-                            viewport={{ once: true }}
-                            variants={fadeUp}
+                            viewport={{ once: true, margin: "-100px" }}
+                            variants={slideIn}
                             custom={0}
                         >
                             Discover Our Exceptional Amenities
@@ -37,8 +72,8 @@ export default function AmenitiesSection() {
                             className="max-w-[700px] text-muted-foreground md:text-xl/relaxed"
                             initial="hidden"
                             whileInView="visible"
-                            viewport={{ once: true }}
-                            variants={fadeUp}
+                            viewport={{ once: true, margin: "-100px" }}
+                            variants={slideIn}
                             custom={1}
                         >
                             At Hotelio, we believe in providing an unparalleled experience.
@@ -50,8 +85,8 @@ export default function AmenitiesSection() {
                             className="grid gap-2 text-lg text-muted-foreground"
                             initial="hidden"
                             whileInView="visible"
-                            viewport={{ once: true }}
-                            variants={fadeUp}
+                            viewport={{ once: true, margin: "-100px" }}
+                            variants={slideIn}
                             custom={2}
                         >
                             {[
@@ -60,22 +95,30 @@ export default function AmenitiesSection() {
                                 'Gourmet Dining Options',
                                 'Sparkling Outdoor Pool',
                             ].map((item, index) => (
-                                <li key={index} className="flex items-center gap-2">
+                                <motion.li
+                                    key={index}
+                                    className="flex items-center gap-2"
+                                    custom={index + 2}
+                                    initial="hidden"
+                                    whileInView="visible"
+                                    viewport={{ once: true, margin: "-100px" }}
+                                    variants={slideIn}
+                                >
                                     <CheckCircle className="h-5 w-5 text-primary" />
                                     {item}
-                                </li>
+                                </motion.li>
                             ))}
                         </motion.ul>
 
                         <motion.div
                             initial="hidden"
                             whileInView="visible"
-                            viewport={{ once: true }}
-                            variants={fadeUp}
-                            custom={3}
+                            viewport={{ once: true, margin: "-100px" }}
+                            variants={slideIn}
+                            custom={6}
                         >
                             <Link to="/rooms">
-                                <Button size="lg">Explore Rooms</Button>
+                                <Button size="lg" className="mt-4">Explore Rooms</Button>
                             </Link>
                         </motion.div>
                     </div>
@@ -85,11 +128,11 @@ export default function AmenitiesSection() {
                         width={700}
                         height={500}
                         alt="Hotel Amenities"
-                        className="mx-auto aspect-video overflow-hidden rounded-xl object-cover object-center sm:w-full"
-                        initial={{ opacity: 0, x: 100 }}
-                        whileInView={{ opacity: 1, x: 0 }}
-                        viewport={{ once: true }}
-                        transition={{ duration: 0.8, ease: 'easeOut' }}
+                        className="mx-auto aspect-video overflow-hidden rounded-xl object-cover object-center sm:w-full shadow-lg"
+                        initial="hidden"
+                        whileInView="visible"
+                        viewport={{ once: true, margin: "-100px" }}
+                        variants={slideInRight}
                     />
                 </div>
             </div>
