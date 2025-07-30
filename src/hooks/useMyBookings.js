@@ -3,6 +3,7 @@ import axiosInstance from '@/lib/axiosInstance';
 
 const getMyBookings = async () => {
   const res = await axiosInstance.get('/my-bookings');
+  console.log("my bookings data:", res.data);
   return res.data;
 };
 
