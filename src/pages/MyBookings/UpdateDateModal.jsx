@@ -13,10 +13,10 @@ import { Calendar } from '@/components/ui/calendar';
 import { Label } from '@/components/ui/label';
 import { format } from 'date-fns';
 import moment from 'moment';
-import axios from 'axios';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { toast } from 'sonner';
 import { Separator } from '@/components/ui/separator';
+import axiosInstance from '@/lib/axiosInstance';
 
 export function UpdateDateModal({ isOpen, onClose, booking }) {
   const [newDate, setNewDate] = useState(moment(booking.bookedDate).toDate());
@@ -33,8 +33,8 @@ export function UpdateDateModal({ isOpen, onClose, booking }) {
 
   const { mutate, isLoading } = useMutation({
     mutationFn: async () => {
-      const res = await axios.patch(
-        `http://localhost:5000/api/bookings/${booking.id}`,
+      const res = await axiosInstance.patch(
+        `/bookings/${booking.id}`,
         { newDate: moment(newDate).format('YYYY-MM-DD') },
         {
           headers: {
