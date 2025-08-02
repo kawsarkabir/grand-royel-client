@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
-import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { Link } from 'react-router';
 
 const slides = [
@@ -46,22 +45,14 @@ export function HeroSlider() {
     return () => clearInterval(timer);
   }, []);
 
-  const goToNext = () => {
-    setCurrentSlide((prev) => (prev + 1) % slides.length);
-  };
-
-  const goToPrev = () => {
-    setCurrentSlide((prev) => (prev - 1 + slides.length) % slides.length);
-  };
 
   return (
     <section className="relative w-full h-[60vh] md:h-[80vh] lg:h-[92vh] overflow-hidden">
       {slides.map((slide, index) => (
         <div
           key={slide.id}
-          className={`absolute inset-0 transition-opacity duration-1000 ease-in-out ${
-            index === currentSlide ? 'opacity-100' : 'opacity-0'
-          }`}
+          className={`absolute inset-0 transition-opacity duration-1000 ease-in-out ${index === currentSlide ? 'opacity-100' : 'opacity-0'
+            }`}
         >
           <img
             src={slide.image || '/placeholder.svg'}
@@ -85,22 +76,6 @@ export function HeroSlider() {
           </div>
         </div>
       ))}
-      <Button
-        variant="ghost"
-        size="icon"
-        className="absolute left-4 top-1/2 -translate-y-1/2 z-10 text-white hover:bg-white/20"
-        onClick={goToPrev}
-      >
-        <ChevronLeft className="h-6 w-6" />
-      </Button>
-      <Button
-        variant="ghost"
-        size="icon"
-        className="absolute right-4 top-1/2 -translate-y-1/2 z-10 text-white hover:bg-white/20"
-        onClick={goToNext}
-      >
-        <ChevronRight className="h-6 w-6" />
-      </Button>
       <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2 z-10">
         {slides.map((_, index) => (
           <button
