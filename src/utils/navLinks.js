@@ -15,12 +15,6 @@ const navLinks = [
     id: 3,
   },
   {
-    name: 'My Bookings',
-    path: '/my-bookings',
-    id: 4,
-    private: true,
-  },
-  {
     name: 'Contact',
     path: '/contact',
     id: 5,

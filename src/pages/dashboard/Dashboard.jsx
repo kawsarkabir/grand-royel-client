@@ -10,7 +10,7 @@ import {
   FaUserCircle,
   FaEllipsisV,
   FaSignOutAlt,
-  FaHome
+  FaHome,
 } from 'react-icons/fa';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -32,10 +32,33 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
-import { Link } from 'react-router';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
+import { Link, useNavigate } from 'react-router';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { LayoutDashboard, LogOut } from 'lucide-react';
+import { useAuth } from '@/hooks/useAuth';
+import MyBookingsPage from '../MyBookings/MyBookings';
 
 export default function DashboardHome() {
+  const navigate = useNavigate();
+  const { user, logout } = useAuth();
+  const handleLogout = async () => {
+    await logout();
+    navigate('/');
+  };
+  // Get user initials for avatar fallback
+  const getUserInitials = () => {
+    if (!user?.displayName) return 'U';
+    const names = user.displayName.split(' ');
+    return names.length > 1 ? `${names[0][0]}${names[1][0]}` : names[0][0];
+  };
   const [activeTab, setActiveTab] = useState('dashboard');
   const [roomSearchTerm, setRoomSearchTerm] = useState('');
   const [userSearchTerm, setUserSearchTerm] = useState('');
@@ -44,50 +67,136 @@ export default function DashboardHome() {
 
   // Mock data
   const stats = [
-    { title: 'Total Users', value: 42, icon: <FaUsers className="text-orange-500" />, trend: 'down' },
-    { title: 'Total Rooms', value: 87, icon: <FaBed className="text-green-500" />, trend: 'up' },
-    { title: 'Total Revenue', value: '$24,580', icon: <FaMoneyBillWave className="text-purple-500" />, trend: 'up' },
+    {
+      title: 'Total Users',
+      value: 42,
+      icon: <FaUsers className="text-orange-500" />,
+      trend: 'down',
+    },
+    {
+      title: 'Total Rooms',
+      value: 87,
+      icon: <FaBed className="text-green-500" />,
+      trend: 'up',
+    },
+    {
+      title: 'Total Revenue',
+      value: '$24,580',
+      icon: <FaMoneyBillWave className="text-purple-500" />,
+      trend: 'up',
+    },
   ];
 
   const rooms = [
-    { id: 1, number: 'Deluxe 201', type: 'Deluxe', price: '$200', status: 'occupied' },
-    { id: 2, number: 'Suite 305', type: 'Suite', price: '$350', status: 'available' },
-    { id: 3, number: 'Standard 102', type: 'Standard', price: '$120', status: 'maintenance' },
-    { id: 4, number: 'Premium 401', type: 'Premium', price: '$280', status: 'available' },
-    { id: 5, number: 'Deluxe 202', type: 'Deluxe', price: '$200', status: 'occupied' }
+    {
+      id: 1,
+      number: 'Deluxe 201',
+      type: 'Deluxe',
+      price: '$200',
+      status: 'occupied',
+    },
+    {
+      id: 2,
+      number: 'Suite 305',
+      type: 'Suite',
+      price: '$350',
+      status: 'available',
+    },
+    {
+      id: 3,
+      number: 'Standard 102',
+      type: 'Standard',
+      price: '$120',
+      status: 'maintenance',
+    },
+    {
+      id: 4,
+      number: 'Premium 401',
+      type: 'Premium',
+      price: '$280',
+      status: 'available',
+    },
+    {
+      id: 5,
+      number: 'Deluxe 202',
+      type: 'Deluxe',
+      price: '$200',
+      status: 'occupied',
+    },
   ];
 
   const users = [
-    { id: 1, name: 'John Doe', email: 'john@example.com', phone: '+1 (555) 123-4567', location: 'New York', status: 'active' },
-    { id: 2, name: 'Jane Smith', email: 'jane@example.com', phone: '+1 (555) 987-6543', location: 'Los Angeles', status: 'active' },
-    { id: 3, name: 'Robert Johnson', email: 'robert@example.com', phone: '+1 (555) 456-7890', location: 'Chicago', status: 'inactive' },
-    { id: 4, name: 'Emily Davis', email: 'emily@example.com', phone: '+1 (555) 789-0123', location: 'Miami', status: 'active' },
-    { id: 5, name: 'Michael Brown', email: 'michael@example.com', phone: '+1 (555) 234-5678', location: 'New York', status: 'active' }
+    {
+      id: 1,
+      name: 'John Doe',
+      email: 'john@example.com',
+      phone: '+1 (555) 123-4567',
+      location: 'New York',
+      status: 'active',
+    },
+    {
+      id: 2,
+      name: 'Jane Smith',
+      email: 'jane@example.com',
+      phone: '+1 (555) 987-6543',
+      location: 'Los Angeles',
+      status: 'active',
+    },
+    {
+      id: 3,
+      name: 'Robert Johnson',
+      email: 'robert@example.com',
+      phone: '+1 (555) 456-7890',
+      location: 'Chicago',
+      status: 'inactive',
+    },
+    {
+      id: 4,
+      name: 'Emily Davis',
+      email: 'emily@example.com',
+      phone: '+1 (555) 789-0123',
+      location: 'Miami',
+      status: 'active',
+    },
+    {
+      id: 5,
+      name: 'Michael Brown',
+      email: 'michael@example.com',
+      phone: '+1 (555) 234-5678',
+      location: 'New York',
+      status: 'active',
+    },
   ];
 
   // Filter rooms based on search and status filter
-  const filteredRooms = rooms.filter(room => {
-    const matchesSearch = room.number.toLowerCase().includes(roomSearchTerm.toLowerCase()) ||
+  const filteredRooms = rooms.filter((room) => {
+    const matchesSearch =
+      room.number.toLowerCase().includes(roomSearchTerm.toLowerCase()) ||
       room.type.toLowerCase().includes(roomSearchTerm.toLowerCase());
-    const matchesStatus = roomStatusFilter === 'all' || room.status === roomStatusFilter;
+    const matchesStatus =
+      roomStatusFilter === 'all' || room.status === roomStatusFilter;
     return matchesSearch && matchesStatus;
   });
 
   // Filter users based on search and location filter
-  const filteredUsers = users.filter(user => {
-    const matchesSearch = user.name.toLowerCase().includes(userSearchTerm.toLowerCase()) ||
+  const filteredUsers = users.filter((user) => {
+    const matchesSearch =
+      user.name.toLowerCase().includes(userSearchTerm.toLowerCase()) ||
       user.email.toLowerCase().includes(userSearchTerm.toLowerCase());
-    const matchesLocation = userLocationFilter === 'all' || user.location === userLocationFilter;
+    const matchesLocation =
+      userLocationFilter === 'all' || user.location === userLocationFilter;
     return matchesSearch && matchesLocation;
   });
 
+  // eslint-disable-next-line unused-imports/no-unused-vars
   const handleRoomAction = (action, roomId) => {
-    console.log(`${action} room with id: ${roomId}`);
+    // console.log(`${action} room with id: ${roomId}`);
     // Implement your actual edit/delete logic here
   };
 
+  // eslint-disable-next-line unused-imports/no-unused-vars
   const handleUserAction = (action, userId) => {
-    console.log(`${action} user with id: ${userId}`);
+    // console.log(`${action} user with id: ${userId}`);
     // Implement your actual edit/delete logic here
   };
 
@@ -114,7 +223,9 @@ export default function DashboardHome() {
                     <CardContent>
                       <div className="text-2xl font-bold">{stat.value}</div>
                       <p className="text-xs text-gray-500 mt-1">
-                        {stat.trend === 'up' ? '↑ 12% from last month' : '↓ 8% from last month'}
+                        {stat.trend === 'up'
+                          ? '↑ 12% from last month'
+                          : '↓ 8% from last month'}
                       </p>
                     </CardContent>
                   </Card>
@@ -144,7 +255,10 @@ export default function DashboardHome() {
                         onChange={(e) => setRoomSearchTerm(e.target.value)}
                       />
                     </div>
-                    <Select value={roomStatusFilter} onValueChange={setRoomStatusFilter}>
+                    <Select
+                      value={roomStatusFilter}
+                      onValueChange={setRoomStatusFilter}
+                    >
                       <SelectTrigger className="w-[180px]">
                         <SelectValue placeholder="Filter by status" />
                       </SelectTrigger>
@@ -179,9 +293,11 @@ export default function DashboardHome() {
                         <TableCell>
                           <Badge
                             variant={
-                              room.status === 'available' ? 'default' :
-                                room.status === 'occupied' ? 'destructive' :
-                                  'secondary'
+                              room.status === 'available'
+                                ? 'default'
+                                : room.status === 'occupied'
+                                  ? 'destructive'
+                                  : 'secondary'
                             }
                           >
                             {room.status}
@@ -195,12 +311,18 @@ export default function DashboardHome() {
                               </Button>
                             </DropdownMenuTrigger>
                             <DropdownMenuContent align="end">
-                              <DropdownMenuItem onClick={() => handleRoomAction('edit', room.id)}>
+                              <DropdownMenuItem
+                                onClick={() =>
+                                  handleRoomAction('edit', room.id)
+                                }
+                              >
                                 Edit
                               </DropdownMenuItem>
                               <DropdownMenuItem
                                 className="text-red-600"
-                                onClick={() => handleRoomAction('delete', room.id)}
+                                onClick={() =>
+                                  handleRoomAction('delete', room.id)
+                                }
                               >
                                 Delete
                               </DropdownMenuItem>
@@ -236,7 +358,10 @@ export default function DashboardHome() {
                         onChange={(e) => setUserSearchTerm(e.target.value)}
                       />
                     </div>
-                    <Select value={userLocationFilter} onValueChange={setUserLocationFilter}>
+                    <Select
+                      value={userLocationFilter}
+                      onValueChange={setUserLocationFilter}
+                    >
                       <SelectTrigger className="w-[180px]">
                         <SelectValue placeholder="Filter by location" />
                       </SelectTrigger>
@@ -272,7 +397,9 @@ export default function DashboardHome() {
                         <TableCell>{user.location}</TableCell>
                         <TableCell>
                           <Badge
-                            variant={user.status === 'active' ? 'default' : 'secondary'}
+                            variant={
+                              user.status === 'active' ? 'default' : 'secondary'
+                            }
                           >
                             {user.status}
                           </Badge>
@@ -287,7 +414,9 @@ export default function DashboardHome() {
                             <DropdownMenuContent align="end">
                               <DropdownMenuItem
                                 className="text-red-600"
-                                onClick={() => handleUserAction('delete', user.id)}
+                                onClick={() =>
+                                  handleUserAction('delete', user.id)
+                                }
                               >
                                 Delete User
                               </DropdownMenuItem>
@@ -302,6 +431,9 @@ export default function DashboardHome() {
             </Card>
           </motion.div>
         );
+
+      case 'bookings':
+        return <MyBookingsPage />;
       default:
         return null;
     }
@@ -350,21 +482,28 @@ export default function DashboardHome() {
                 <FaUsers className="mr-2" /> User Management
               </Button>
             </li>
+            <li>
+              <Button
+                onClick={() => setActiveTab('bookings')}
+                variant={activeTab === 'users' ? 'secondary' : 'ghost'}
+                className={`w-full justify-start ${activeTab === 'users' ? 'bg-accent text-accent-foreground' : 'hover:bg-white hover:text-primary'}`}
+              >
+                <FaUsers className="mr-2" /> My Bookings
+              </Button>
+            </li>
           </ul>
         </nav>
         <div className="p-4 border-t border-primary-700 space-y-2">
           <Link to="/">
             <Button
-              variant={"ghost"}
-
+              variant={'ghost'}
               className="w-full justify-start hover:bg-white hover:text-primary"
             >
-
               <FaHome className="mr-2" /> Go Back
-
             </Button>
           </Link>
           <Button
+            onClick={handleLogout}
             variant="ghost"
             className="w-full justify-start  hover:bg-white hover:text-primary"
           >
@@ -383,19 +522,47 @@ export default function DashboardHome() {
           <div className="flex items-center space-x-4">
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <div className='cursor-pointer'>
-                  <FaUserCircle className="h-8 w-8  border-primary border-2 rounded-full" />
-                </div>
+                <Button
+                  variant="ghost"
+                  className="relative h-9 w-9 rounded-full border-2 border-primary hover:border-primary focus-visible:ring-0 focus-visible:ring-offset-0 focus-visible:border-primary"
+                >
+                  <Avatar className="h-8 w-8">
+                    <AvatarImage
+                      src={user?.photoURL || undefined}
+                      alt={user.displayName || 'User'}
+                    />
+                    <AvatarFallback>{getUserInitials()}</AvatarFallback>
+                  </Avatar>
+                </Button>
               </DropdownMenuTrigger>
-              <DropdownMenuContent align="end">
-                <DropdownMenuItem>
-                  <FaUserCircle className="mr-2" /> Profile
+              <DropdownMenuContent className="w-48" align="end" forceMount>
+                <DropdownMenuLabel className="font-normal">
+                  <div className="flex flex-col space-y-1">
+                    <p className="text-sm font-medium leading-none">
+                      {user.displayName || 'User'}
+                    </p>
+                    <p className="text-xs leading-none text-muted-foreground">
+                      {user.role || 'user'}
+                    </p>
+                  </div>
+                </DropdownMenuLabel>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem asChild>
+                  <Link
+                    to="/dashboard"
+                    className="w-full cursor-pointer flex items-center gap-2"
+                  >
+                    <LayoutDashboard className="h-4 w-4" />
+                    Dashboard
+                  </Link>
                 </DropdownMenuItem>
-                <DropdownMenuItem>
-                  <FaHome className="mr-2" /> Dashboard
-                </DropdownMenuItem>
-                <DropdownMenuItem>
-                  <FaSignOutAlt className="mr-2" /> Logout
+                <DropdownMenuSeparator />
+                <DropdownMenuItem
+                  className="cursor-pointer flex items-center gap-2"
+                  onClick={handleLogout}
+                >
+                  <LogOut className="h-4 w-4" />
+                  Log out
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
@@ -404,9 +571,7 @@ export default function DashboardHome() {
 
         {/* Dashboard Content */}
         <main className="p-4">
-          <AnimatePresence mode="wait">
-            {renderTabContent()}
-          </AnimatePresence>
+          <AnimatePresence mode="wait">{renderTabContent()}</AnimatePresence>
         </main>
       </div>
 

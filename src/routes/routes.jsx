@@ -1,43 +1,47 @@
-import Root from '@/layout/Root';
-import Home from '@/pages/home/Home';
-import SignIn from '@/pages/signIn/SignIn';
-import SignUp from '@/pages/signUp/SignUp';
+import { lazy } from 'react';
 import { createBrowserRouter } from 'react-router';
 import PrivateRoute from './PrivateRoutes';
-import NotFoundPage from '@/pages/NotFound/NotFound';
-import MyBookings from '@/pages/MyBookings/MyBookings';
-import RoomsPage from '@/pages/RoomPage/Room';
-import RoomDetailsPage from '@/pages/RoomDetails/RoomDetails';
-import About from '@/pages/About/About';
-import Contact from '@/pages/Contact/Contact';
-import DashboardHome from '@/pages/dashboard/Dashboard';
+// import AdminRoute from './AdminRoutes'; // Optional for admin-only routes
+
+// Layouts
+import RootLayout from '@/layout/Root';
 import DashboardLayout from '@/layout/DashboardLayout';
+
+// Public Components
+const Home = lazy(() => import('@/pages/home/Home'));
+const SignIn = lazy(() => import('@/pages/signIn/SignIn'));
+const SignUp = lazy(() => import('@/pages/signUp/SignUp'));
+const About = lazy(() => import('@/pages/About/About'));
+const Contact = lazy(() => import('@/pages/Contact/Contact'));
+const RoomsPage = lazy(() => import('@/pages/RoomPage/Room'));
+import NotFoundPage from '@/pages/NotFound/NotFound';
+import MyBookingsPage from '@/pages/MyBookings/MyBookings';
+
+// Private Components
+const RoomDetailsPage = lazy(() => import('@/pages/RoomDetails/RoomDetails'));
+const MyBookings = lazy(() => import('@/pages/MyBookings/MyBookings'));
+
+// Dashboard Components
+const DashboardHome = lazy(() => import('@/pages/dashboard/Dashboard'));
+// const UsersManagement = lazy(() => import('@/pages/dashboard/UsersManagement'));
+// const RoomsManagement = lazy(() => import('@/pages/dashboard/RoomsManagement'));
 
 export const router = createBrowserRouter([
   {
     path: '/',
-    element: <Root />,
+    element: <RootLayout />,
     errorElement: <NotFoundPage />,
     children: [
+      { index: true, element: <Home /> },
+      { path: 'rooms', element: <RoomsPage /> },
+      { path: 'about', element: <About /> },
+      { path: 'contact', element: <Contact /> },
+      { path: 'signup', element: <SignUp /> },
+      { path: 'signin', element: <SignIn /> },
+
+      // Protected routes
       {
-        index: true,
-        element: <Home />,
-      },
-      {
-        path: '/rooms',
-        element: <RoomsPage />,
-      },
-      {
-        path: "/about",
-        element: <About />
-      },
-      {
-        path: "/contact",
-        element: <Contact />
-      },
-      // private routes
-      {
-        path: '/rooms/:id',
+        path: 'rooms/:id',
         element: (
           <PrivateRoute>
             <RoomDetailsPage />
@@ -45,32 +49,38 @@ export const router = createBrowserRouter([
         ),
       },
       {
-        path: '/my-bookings',
+        path: 'bookings',
         element: (
           <PrivateRoute>
             <MyBookings />
           </PrivateRoute>
         ),
       },
-      {
-        path: '/signup',
-        element: <SignUp />,
-      },
-      {
-        path: '/signin',
-        element: <SignIn />,
-      },
     ],
   },
   {
-    path: "/dashboard",
-    element: <DashboardLayout />,
+    path: '/dashboard',
+    element: (
+      <PrivateRoute>
+        <DashboardLayout />
+      </PrivateRoute>
+    ),
     errorElement: <NotFoundPage />,
     children: [
-      {
-        path: "/dashboard",
-        element: <DashboardHome />
-      }
-    ]
-  }
+      { index: true, element: <DashboardHome /> },
+      // { path: 'users', element: <UsersManagement /> },
+      // { path: 'rooms', element: <RoomsManagement /> },
+      { path: 'bookings', element: <MyBookingsPage /> },
+
+      // Admin-only routes example:
+      // {
+      //   path: 'admin-settings',
+      //   element: <AdminRoute><AdminSettings /></AdminRoute>
+      // }
+    ],
+  },
+  {
+    path: '*',
+    element: <NotFoundPage />,
+  },
 ]);

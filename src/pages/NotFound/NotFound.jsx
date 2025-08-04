@@ -18,7 +18,7 @@ export default function NotFoundPage() {
         Oops! The page you&apos;re looking for doesn&apos;t exist. It might have
         been moved or deleted.
       </p>
-      <Link href="/">
+      <Link to="/">
         <Button size="lg">Back to Home</Button>
       </Link>
     </div>
