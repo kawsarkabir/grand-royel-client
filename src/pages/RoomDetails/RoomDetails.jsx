@@ -103,9 +103,7 @@ export default function RoomDetailsPage() {
                 </CollapsibleContent>
               </Collapsible>
             </div>
-
             <Separator />
-
             <div className="grid gap-4">
               <h2 className="text-2xl font-semibold">What this place offers</h2>
               <ul className="grid grid-cols-1 sm:grid-cols-2 gap-4">
