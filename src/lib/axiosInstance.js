@@ -1,11 +1,8 @@
-// src/lib/axiosInstance.js
 import axios from 'axios';
 import { getAuth } from 'firebase/auth';
 
 const axiosInstance = axios.create({
-  baseURL: 'https://grand-royel-server.vercel.app/api/v1',
-  // baseURL: 'http://localhost:5000/api/v1',
-  withCredentials: true,
+  baseURL: import.meta.env.VITE_API_URL,
 });
 
 axiosInstance.interceptors.request.use(async (config) => {
