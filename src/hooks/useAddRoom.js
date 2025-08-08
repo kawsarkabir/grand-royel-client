@@ -8,7 +8,6 @@ const addRoom = async (roomData) => {
 
 export const useAddRoom = () => {
   const queryClient = useQueryClient();
-
   return useMutation({
     mutationFn: addRoom,
     onSuccess: () => {

@@ -18,25 +18,53 @@ import {
 } from '@/components/ui/dialog';
 import RoomsTable from './RoomsTable';
 import AddRoomForm from './AddRoomForm';
+import { useQuery } from '@tanstack/react-query';
+import { toast } from 'sonner';
+import axiosInstance from '@/lib/axiosInstance';
+import LoadingSpinner from '@/components/LoadingSpinner';
 
 export default function RoomManagement() {
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState('all');
   const [isAddRoomOpen, setIsAddRoomOpen] = useState(false);
 
-  // You'll replace this with real data fetching
-  const rooms = [
-    // Your room data here
-  ];
+  // Fetch rooms data
+  const {
+    data: rooms = [],
+    isLoading,
+    error,
+    refetch,
+  } = useQuery({
+    queryKey: ['rooms'],
+    queryFn: async () => {
+      const response = await axiosInstance.get('/rooms');
+      return response.data;
+    },
+  });
+
+  if (isLoading) return <LoadingSpinner />;
+  if (error) {
+    toast.error('Failed to load rooms');
+    return <div>Error loading rooms</div>;
+  }
 
   const filteredRooms = rooms.filter((room) => {
     const matchesSearch =
-      room.number.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      room.type.toLowerCase().includes(searchTerm.toLowerCase());
+      room.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      room.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      room.location.toLowerCase().includes(searchTerm.toLowerCase());
     const matchesStatus =
-      statusFilter === 'all' || room.status === statusFilter;
+      statusFilter === 'all' ||
+      (statusFilter === 'available' && room.available) ||
+      (statusFilter === 'occupied' && !room.available);
     return matchesSearch && matchesStatus;
   });
+
+  const handleRoomAdded = () => {
+    setIsAddRoomOpen(false);
+    refetch();
+    toast.success('Room added successfully');
+  };
 
   return (
     <>
@@ -62,7 +90,6 @@ export default function RoomManagement() {
                   <SelectItem value="all">All Status</SelectItem>
                   <SelectItem value="available">Available</SelectItem>
                   <SelectItem value="occupied">Occupied</SelectItem>
-                  <SelectItem value="maintenance">Maintenance</SelectItem>
                 </SelectContent>
               </Select>
               <Button
@@ -75,7 +102,7 @@ export default function RoomManagement() {
           </div>
         </CardHeader>
         <CardContent>
-          <RoomsTable rooms={filteredRooms} />
+          <RoomsTable rooms={filteredRooms} onRefresh={refetch} />
         </CardContent>
       </Card>
 
@@ -85,7 +112,7 @@ export default function RoomManagement() {
           <DialogHeader>
             <DialogTitle>Add New Room</DialogTitle>
           </DialogHeader>
-          <AddRoomForm onSuccess={() => setIsAddRoomOpen(false)} />
+          <AddRoomForm onSuccess={handleRoomAdded} />
         </DialogContent>
       </Dialog>
     </>

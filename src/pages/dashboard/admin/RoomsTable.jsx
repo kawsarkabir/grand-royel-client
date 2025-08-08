@@ -1,4 +1,3 @@
-/* eslint-disable unused-imports/no-unused-vars */
 /* eslint-disable react/prop-types */
 import {
   Table,
@@ -17,24 +16,28 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
+import { toast } from 'sonner';
+import { useDeleteRoom } from '@/hooks/useRooms';
 
-export default function RoomsTable({ rooms }) {
-  const handleEdit = (roomId) => {
-    // Handle edit logic
-    // console.log('Edit room:', roomId);
-  };
+export default function RoomsTable({ rooms, onRefresh }) {
+  const deleteRoomMutation = useDeleteRoom();
 
-  const handleDelete = (roomId) => {
-    // Handle delete logic
-    // console.log('Delete room:', roomId);
+  const handleDelete = async (roomId) => {
+    try {
+      await deleteRoomMutation.mutateAsync(roomId);
+      toast.success('Room deleted successfully');
+      onRefresh();
+    } catch (error) {
+      toast.error('Failed to delete room', error.message);
+    }
   };
 
   return (
     <Table>
       <TableHeader>
         <TableRow>
-          <TableHead>Room Number</TableHead>
-          <TableHead>Type</TableHead>
+          <TableHead>Name</TableHead>
+          <TableHead>Location</TableHead>
           <TableHead>Price</TableHead>
           <TableHead>Status</TableHead>
           <TableHead className="text-right">Actions</TableHead>
@@ -42,21 +45,13 @@ export default function RoomsTable({ rooms }) {
       </TableHeader>
       <TableBody>
         {rooms.map((room) => (
-          <TableRow key={room.id}>
-            <TableCell>{room.number}</TableCell>
-            <TableCell>{room.type}</TableCell>
-            <TableCell>{room.price}</TableCell>
+          <TableRow key={room._id}>
+            <TableCell>{room.name}</TableCell>
+            <TableCell>{room.location}</TableCell>
+            <TableCell>${room.price}</TableCell>
             <TableCell>
-              <Badge
-                variant={
-                  room.status === 'available'
-                    ? 'default'
-                    : room.status === 'occupied'
-                      ? 'destructive'
-                      : 'secondary'
-                }
-              >
-                {room.status}
+              <Badge variant={room.available ? 'default' : 'destructive'}>
+                {room.available ? 'Available' : 'Occupied'}
               </Badge>
             </TableCell>
             <TableCell className="text-right">
@@ -67,12 +62,10 @@ export default function RoomsTable({ rooms }) {
                   </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end">
-                  <DropdownMenuItem onClick={() => handleEdit(room.id)}>
-                    Edit
-                  </DropdownMenuItem>
+                  <DropdownMenuItem>Edit</DropdownMenuItem>
                   <DropdownMenuItem
                     className="text-red-600"
-                    onClick={() => handleDelete(room.id)}
+                    onClick={() => handleDelete(room._id)}
                   >
                     Delete
                   </DropdownMenuItem>
