@@ -1,4 +1,5 @@
 /* eslint-disable react/prop-types */
+import { useState } from 'react';
 import {
   Table,
   TableBody,
@@ -18,9 +19,13 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { toast } from 'sonner';
 import { useDeleteRoom } from '@/hooks/useRooms';
+import RoomForm from './RoomForm';
+import { Dialog, DialogContent } from '@/components/ui/dialog';
 
 export default function RoomsTable({ rooms, onRefresh }) {
   const deleteRoomMutation = useDeleteRoom();
+  const [currentRoom, setCurrentRoom] = useState(null);
+  const [isFormOpen, setIsFormOpen] = useState(false);
 
   const handleDelete = async (roomId) => {
     try {
@@ -32,49 +37,72 @@ export default function RoomsTable({ rooms, onRefresh }) {
     }
   };
 
+  const handleEdit = (room) => {
+    setCurrentRoom(room);
+    setIsFormOpen(true);
+  };
+
   return (
-    <Table>
-      <TableHeader>
-        <TableRow>
-          <TableHead>Name</TableHead>
-          <TableHead>Location</TableHead>
-          <TableHead>Price</TableHead>
-          <TableHead>Status</TableHead>
-          <TableHead className="text-right">Actions</TableHead>
-        </TableRow>
-      </TableHeader>
-      <TableBody>
-        {rooms.map((room) => (
-          <TableRow key={room._id}>
-            <TableCell>{room.name}</TableCell>
-            <TableCell>{room.location}</TableCell>
-            <TableCell>${room.price}</TableCell>
-            <TableCell>
-              <Badge variant={room.available ? 'default' : 'destructive'}>
-                {room.available ? 'Available' : 'Occupied'}
-              </Badge>
-            </TableCell>
-            <TableCell className="text-right">
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <Button variant="ghost" size="icon">
-                    <FaEllipsisV className="h-4 w-4" />
-                  </Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent align="end">
-                  <DropdownMenuItem>Edit</DropdownMenuItem>
-                  <DropdownMenuItem
-                    className="text-red-600"
-                    onClick={() => handleDelete(room._id)}
-                  >
-                    Delete
-                  </DropdownMenuItem>
-                </DropdownMenuContent>
-              </DropdownMenu>
-            </TableCell>
+    <>
+      <Table>
+        <TableHeader>
+          <TableRow>
+            <TableHead>Name</TableHead>
+            <TableHead>Location</TableHead>
+            <TableHead>Price</TableHead>
+            <TableHead>Status</TableHead>
+            <TableHead className="text-right">Actions</TableHead>
           </TableRow>
-        ))}
-      </TableBody>
-    </Table>
+        </TableHeader>
+        <TableBody>
+          {rooms?.map((room) => (
+            <TableRow key={room._id}>
+              <TableCell>{room.name}</TableCell>
+              <TableCell>{room.location}</TableCell>
+              <TableCell>${room.price}</TableCell>
+              <TableCell>
+                <Badge variant={room.available ? 'default' : 'destructive'}>
+                  {room.available ? 'Available' : 'Occupied'}
+                </Badge>
+              </TableCell>
+              <TableCell className="text-right">
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Button variant="ghost" size="icon">
+                      <FaEllipsisV className="h-4 w-4" />
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent align="end">
+                    <DropdownMenuItem onClick={() => handleEdit(room)}>
+                      Edit
+                    </DropdownMenuItem>
+                    <DropdownMenuItem
+                      className="text-red-600"
+                      onClick={() => handleDelete(room._id)}
+                    >
+                      Delete
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              </TableCell>
+            </TableRow>
+          ))}
+        </TableBody>
+      </Table>
+
+      <Dialog open={isFormOpen} onOpenChange={setIsFormOpen}>
+        <DialogContent className="sm:max-w-3xl max-h-[90vh] overflow-y-auto">
+          <RoomForm
+            initialData={currentRoom}
+            isUpdating={!!currentRoom}
+            onSuccess={() => {
+              setIsFormOpen(false);
+              onRefresh();
+            }}
+            onCancel={() => setIsFormOpen(false)}
+          />
+        </DialogContent>
+      </Dialog>
+    </>
   );
 }

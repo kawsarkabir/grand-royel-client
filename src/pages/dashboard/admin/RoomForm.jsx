@@ -1,5 +1,5 @@
 /* eslint-disable react/prop-types */
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -10,16 +10,19 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-
-import { useAddRoom } from '@/hooks/useAddRoom';
 import { Textarea } from '@/components/ui/textarea';
 import { toast } from 'sonner';
+import { useUpdateRoom } from '@/hooks/useRooms';
+import { useAddRoom } from '@/hooks/useAddRoom';
 
-export default function AddRoomForm({ onSuccess }) {
-  const { mutate: addRoom } = useAddRoom();
+export default function RoomForm({
+  initialData = null,
+  onSuccess,
+  onCancel,
+  isUpdating = false,
+}) {
   const [imageUrls, setImageUrls] = useState(['', '', '', '']);
   const [amenities, setAmenities] = useState([{ name: '', icon: '' }]);
-
   const [formData, setFormData] = useState({
     name: '',
     description: '',
@@ -28,6 +31,9 @@ export default function AddRoomForm({ onSuccess }) {
     beds: 1,
     bathrooms: 1,
     location: '',
+    available: true,
+    rating: 0,
+    totalReviews: 0,
     host: {
       name: '',
       joined: new Date().getFullYear().toString(),
@@ -35,6 +41,45 @@ export default function AddRoomForm({ onSuccess }) {
       avatar: '/placeholder-user.jpg',
     },
   });
+
+  const { mutate: addRoom } = useAddRoom();
+  const updateRoomMutation = useUpdateRoom();
+
+  // Initialize form when in edit mode
+  useEffect(() => {
+    if (initialData) {
+      setFormData({
+        name: initialData.name,
+        description: initialData.description,
+        price: initialData.price,
+        guests: initialData.guests,
+        beds: initialData.beds,
+        bathrooms: initialData.bathrooms,
+        location: initialData.location,
+        available: initialData.available,
+        rating: initialData.rating,
+        totalReviews: initialData.totalReviews,
+        host: {
+          name: initialData.host.name,
+          joined: initialData.host.joined,
+          superhost: initialData.host.superhost,
+          avatar: initialData.host.avatar,
+        },
+      });
+
+      // Handle images
+      const initialImages = [...initialData.images];
+      while (initialImages.length < 4) initialImages.push('');
+      setImageUrls(initialImages.slice(0, 4));
+
+      // TODO: fix frist one item did not take initial data
+      setAmenities(
+        initialData.amenities?.length > 0
+          ? [...initialData.amenities]
+          : [{ name: '', icon: '' }],
+      );
+    }
+  }, [initialData]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -44,7 +89,9 @@ export default function AddRoomForm({ onSuccess }) {
         name === 'price' ||
         name === 'guests' ||
         name === 'beds' ||
-        name === 'bathrooms'
+        name === 'bathrooms' ||
+        name === 'rating' ||
+        name === 'totalReviews'
           ? Number(value)
           : value,
     }));
@@ -98,24 +145,40 @@ export default function AddRoomForm({ onSuccess }) {
       ...formData,
       images: filteredImageUrls,
       amenities: filteredAmenities,
-      available: true,
-      rating: 0,
-      totalReviews: 0,
     };
 
-    addRoom(roomData, {
-      onSuccess: () => {
-        toast.success('Room added successfully', {
-          description: 'Your new room is now available for booking.',
-        });
-        if (onSuccess) onSuccess();
-      },
-      onError: (error) => {
-        toast.error('Error adding room', {
-          description: error.response?.data?.message || 'Failed to add room',
-        });
-      },
-    });
+    if (isUpdating) {
+      updateRoomMutation.mutate(
+        {
+          id: initialData._id,
+          data: roomData,
+        },
+        {
+          onSuccess: () => {
+            toast.success('Room updated successfully');
+            onSuccess();
+          },
+          onError: (error) => {
+            toast.error('Error updating room', {
+              description:
+                error.response?.data?.message || 'Failed to update room',
+            });
+          },
+        },
+      );
+    } else {
+      addRoom(roomData, {
+        onSuccess: () => {
+          toast.success('Room added successfully');
+          onSuccess();
+        },
+        onError: (error) => {
+          toast.error('Error adding room', {
+            description: error.response?.data?.message || 'Failed to add room',
+          });
+        },
+      });
+    }
   };
 
   const iconOptions = [
@@ -131,7 +194,9 @@ export default function AddRoomForm({ onSuccess }) {
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
       <div className="space-y-4">
-        <h2 className="text-xl font-semibold">Room Information</h2>
+        <h2 className="text-xl font-semibold">
+          {isUpdating ? 'Edit Room' : 'Add New Room'}
+        </h2>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div className="space-y-2">
@@ -224,6 +289,29 @@ export default function AddRoomForm({ onSuccess }) {
             required
           />
         </div>
+
+        {isUpdating && (
+          <div className="space-y-2">
+            <Label>Availability</Label>
+            <Select
+              value={formData.available ? 'available' : 'occupied'}
+              onValueChange={(value) =>
+                setFormData((prev) => ({
+                  ...prev,
+                  available: value === 'available',
+                }))
+              }
+            >
+              <SelectTrigger>
+                <SelectValue placeholder="Select status" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="available">Available</SelectItem>
+                <SelectItem value="occupied">Occupied</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+        )}
       </div>
 
       <div className="space-y-4">
@@ -271,13 +359,21 @@ export default function AddRoomForm({ onSuccess }) {
             <div className="space-y-2">
               <Label htmlFor={`amenity-icon-${index}`}>Icon</Label>
               <Select
-                value={amenity.icon}
+                value={amenity.icon || ''}
                 onValueChange={(value) =>
                   handleAmenityChange(index, 'icon', value)
                 }
               >
                 <SelectTrigger>
-                  <SelectValue placeholder="Select an icon" />
+                  <SelectValue placeholder="Select an icon">
+                    {amenity.icon ? (
+                      <span className="flex items-center gap-2">
+                        {amenity.icon}
+                      </span>
+                    ) : (
+                      'Select an icon'
+                    )}
+                  </SelectValue>
                 </SelectTrigger>
                 <SelectContent>
                   {iconOptions.map((icon) => (
@@ -364,10 +460,10 @@ export default function AddRoomForm({ onSuccess }) {
       </div>
 
       <div className="flex justify-end gap-4">
-        <Button type="button" variant="outline" onClick={onSuccess}>
+        <Button type="button" variant="outline" onClick={onCancel}>
           Cancel
         </Button>
-        <Button type="submit">Add Room</Button>
+        <Button type="submit">{isUpdating ? 'Update Room' : 'Add Room'}</Button>
       </div>
     </form>
   );

@@ -17,7 +17,7 @@ import {
   DialogTitle,
 } from '@/components/ui/dialog';
 import RoomsTable from './RoomsTable';
-import AddRoomForm from './AddRoomForm';
+import AddRoomForm from './RoomForm';
 import { useQuery } from '@tanstack/react-query';
 import { toast } from 'sonner';
 import axiosInstance from '@/lib/axiosInstance';
