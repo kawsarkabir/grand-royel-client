@@ -11,8 +11,23 @@ import { CancelBookingModal } from './CencelBookingModal';
 import { toast } from 'sonner';
 import LoadingSpinner from '@/components/LoadingSpinner';
 import { Link } from 'react-router';
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from '@/components/ui/table';
+import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { Title } from 'react-head';
+import { FaEllipsisV } from 'react-icons/fa';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
 
 export default function MyBookingsPage() {
   const { data: bookings = [], isLoading } = useMyBookings();
@@ -34,10 +49,10 @@ export default function MyBookingsPage() {
       { bookingId, newDate: moment(newDate).format('YYYY-MM-DD') },
       {
         onSuccess: () => {
-          alert('Booking date updated!');
+          toast.success('Booking date updated successfully');
           setUpdateModalOpen(false);
         },
-        onError: () => alert('Failed to update booking date.'),
+        onError: () => toast.error('Failed to update booking date'),
       },
     );
   };
@@ -55,9 +70,10 @@ export default function MyBookingsPage() {
   const handleConfirmCancel = (bookingId) => {
     cancelBookingMutation.mutate(bookingId, {
       onSuccess: () => {
+        toast.success('Booking cancelled successfully');
         setCancelModalOpen(false);
       },
-      onError: () => toast.error('Failed to cancel booking.'),
+      onError: () => toast.error('Failed to cancel booking'),
     });
   };
 
@@ -68,7 +84,7 @@ export default function MyBookingsPage() {
       <div className="text-center py-20">
         <h2 className="text-2xl font-bold">No Bookings Yet</h2>
         <p className="text-muted-foreground">
-          You haven’t booked any rooms yet.
+          You haven&rsquo;t booked any rooms yet.
         </p>
       </div>
     );
@@ -76,88 +92,81 @@ export default function MyBookingsPage() {
   return (
     <div className="container mx-auto px-4 py-12">
       <h1 className="text-3xl font-bold mb-8">My Bookings</h1>
-      <Title> Grand Royel | My Bookings </Title>
-      <div className="overflow-x-auto">
-        <table className="w-full table-auto border border-gray-200 shadow-sm">
-          <thead className="bg-gray-100 text-left">
-            <tr>
-              <th className="p-3">Room</th>
-              <th className="p-3">Name</th>
-              <th className="p-3">Price</th>
-              <th className="p-3">Booked Date</th>
-              <th className="p-3">Status</th>
-              <th className="p-3 text-right">Action</th>
-            </tr>
-          </thead>
-          <tbody>
-            {bookings.map((booking) => (
-              <tr key={booking.id} className="border-t border-gray-200">
-                <td className="p-3">
-                  <img
-                    src={booking.roomImage || '/placeholder.jpg'}
-                    alt={booking.roomName}
-                    className="w-20 h-14 object-cover rounded-md"
-                  />
-                </td>
-                <td className="p-3 font-medium">
-                  <Link
-                    to={`/rooms/${booking.roomId}`}
-                    className="hover:underline"
-                  >
-                    {booking.roomName}
-                  </Link>
-                </td>
-                <td className="p-3">${booking.price}</td>
-                <td className="p-3">
-                  {moment(booking.bookedDate).format('MMM DD, YYYY')}
-                </td>
-                <td className="p-3">
-                  <span
-                    className={`px-2 py-1 rounded-full text-xs font-semibold ${booking.status === 'confirmed'
-                        ? 'bg-green-100 text-green-500'
-                        : 'bg-red-100 text-red-700'
-                      }`}
-                  >
-                    {booking.status}
-                  </span>
-                </td>
-                <td className="p-3 text-right space-x-2">
-                  <Button
-                    size={'sm'}
-                    className={
-                      'bg-sky-100 text-sky-500 rounded-full text-xs font-semibold'
-                    }
-                    onClick={() => handleOpenUpdateModal(booking)}
-                  >
-                    Update
-                  </Button>
-                  <Button
-                    className={
-                      'bg-yellow-100 text-yellow-500 rounded-full text-xs font-semibold'
-                    }
-                    size={'sm'}
-                    onClick={() => openReviewModal(booking)}
-                  >
-                    Review
-                  </Button>
-                  <Button
-                    className={
-                      'bg-red-100 text-red-500 rounded-full text-xs font-semibold'
-                    }
-                    size={'sm'}
-                    onClick={() => openCancelModal(booking)}
-                    disabled={cancelBookingMutation.isLoading}
-                  >
-                    Cancel
-                  </Button>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
 
-      {/* Modals */}
+      <Table>
+        <TableHeader>
+          <TableRow>
+            <TableHead>Room</TableHead>
+            <TableHead>Name</TableHead>
+            <TableHead>Price</TableHead>
+            <TableHead>Booked Date</TableHead>
+            <TableHead>Status</TableHead>
+            <TableHead className="text-right">Actions</TableHead>
+          </TableRow>
+        </TableHeader>
+        <TableBody>
+          {bookings.map((booking) => (
+            <TableRow key={booking.id}>
+              <TableCell>
+                <img
+                  src={booking.roomImage || '/placeholder.jpg'}
+                  alt={booking.roomName}
+                  className="w-20 h-14 object-cover rounded-md"
+                />
+              </TableCell>
+              <TableCell className="font-medium">
+                <Link
+                  to={`/rooms/${booking.roomId}`}
+                  className="hover:underline"
+                >
+                  {booking.roomName}
+                </Link>
+              </TableCell>
+              <TableCell>${booking.price}</TableCell>
+              <TableCell>
+                {moment(booking.bookedDate).format('MMM DD, YYYY')}
+              </TableCell>
+              <TableCell>
+                <Badge
+                  variant={
+                    booking.status === 'confirmed' ? 'default' : 'destructive'
+                  }
+                >
+                  {booking.status}
+                </Badge>
+              </TableCell>
+              <TableCell className="text-right">
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Button variant="ghost" size="icon">
+                      <FaEllipsisV className="h-4 w-4" />
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent align="end">
+                    <DropdownMenuItem
+                      onClick={() => handleOpenUpdateModal(booking)}
+                    >
+                      Update Date
+                    </DropdownMenuItem>
+                    <DropdownMenuItem onClick={() => openReviewModal(booking)}>
+                      Add Review
+                    </DropdownMenuItem>
+                    <DropdownMenuItem
+                      className="text-red-600"
+                      onClick={() => openCancelModal(booking)}
+                      disabled={cancelBookingMutation.isLoading}
+                    >
+                      Cancel Booking
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              </TableCell>
+            </TableRow>
+          ))}
+        </TableBody>
+      </Table>
+
+      {/* Modals - no Dialog wrapper needed since modals handle their own */}
       {selectedBooking && (
         <>
           <UpdateDateModal
@@ -166,11 +175,13 @@ export default function MyBookingsPage() {
             booking={selectedBooking}
             onConfirm={handleConfirmUpdate}
           />
+
           <ReviewModal
             isOpen={reviewModalOpen}
             onClose={() => setReviewModalOpen(false)}
             booking={selectedBooking}
           />
+
           <CancelBookingModal
             isOpen={cancelModalOpen}
             onClose={() => setCancelModalOpen(false)}
