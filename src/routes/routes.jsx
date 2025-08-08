@@ -22,7 +22,7 @@ const RoomDetailsPage = lazy(() => import('@/pages/RoomDetails/RoomDetails'));
 const MyBookings = lazy(() => import('@/pages/MyBookings/MyBookings'));
 
 // Dashboard Components
-const DashboardHome = lazy(() => import('@/pages/dashboard/Dashboard'));
+const Dashboard = lazy(() => import('@/pages/dashboard/Dashboard'));
 // const UsersManagement = lazy(() => import('@/pages/dashboard/UsersManagement'));
 // const RoomsManagement = lazy(() => import('@/pages/dashboard/RoomsManagement'));
 
@@ -67,7 +67,7 @@ export const router = createBrowserRouter([
     ),
     errorElement: <NotFoundPage />,
     children: [
-      { index: true, element: <DashboardHome /> },
+      { index: true, element: <Dashboard /> },
       // { path: 'users', element: <UsersManagement /> },
       // { path: 'rooms', element: <RoomsManagement /> },
       { path: 'bookings', element: <MyBookingsPage /> },
