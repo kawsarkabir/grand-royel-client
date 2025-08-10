@@ -59,7 +59,7 @@ export default function DashboardHomePage() {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-4">
-          <Link to="">
+          <Link to="/dashboard/bookings">
             <Card>
               <CardHeader>
                 <CardTitle>My Bookings</CardTitle>
@@ -69,7 +69,7 @@ export default function DashboardHomePage() {
               </CardContent>
             </Card>
           </Link>
-          <Link to="">
+          <Link to="/dashboard/profile">
             <Card>
               <CardHeader>
                 <CardTitle>My Profile</CardTitle>
