@@ -96,7 +96,7 @@ export default function Navbar() {
                           {user.displayName || 'User'}
                         </p>
                         <p className="text-xs leading-none text-muted-foreground">
-                          {user.role || 'user'}
+                          {user.role}
                         </p>
                       </div>
                     </DropdownMenuLabel>

@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 import { createContext, useEffect, useState } from 'react';
 import {
   createUserWithEmailAndPassword,
@@ -8,20 +9,61 @@ import {
   onAuthStateChanged,
   signOut,
 } from 'firebase/auth';
-
 import { toast } from 'sonner';
 import { auth } from '@/config/firebase.init';
 import { getAuthErrorMessage } from '@/constants/authErrors';
+import axiosInstance from '@/lib/axiosInstance';
 
-// eslint-disable-next-line react-refresh/only-export-components
 export const AuthContext = createContext(null);
 
-// eslint-disable-next-line react/prop-types
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  // REGISTER: new user
+  // -------------------
+  // Helper: Save user to DB
+  // -------------------
+  const saveUserToDB = async (firebaseUser) => {
+    const token = await firebaseUser.getIdToken();
+
+    try {
+      const { data } = await axiosInstance.post(
+        '/users',
+        {
+          email: firebaseUser.email,
+          name: firebaseUser.displayName || null,
+          photoURL: firebaseUser.photoURL || null,
+          role: 'user',
+          createdAt: new Date(),
+        },
+        { headers: { Authorization: `Bearer ${token}` } },
+      );
+
+      return data; // DB user
+    } catch (error) {
+      // If the user already exists, ignore 409 conflict
+      if (error.response?.status !== 409) {
+        throw error;
+      }
+    }
+  };
+
+  // -------------------
+  // Helper: Fetch DB user
+  // -------------------
+  const fetchUserFromDB = async (firebaseUser) => {
+    const token = await firebaseUser.getIdToken();
+
+    const { data } = await axiosInstance.get('/users/me', {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+
+    return data;
+  };
+
+  // -------------------
+  // Register: Email/password
+  // -------------------
   const signUpUser = async (email, password, name, photoURL) => {
     try {
       const result = await createUserWithEmailAndPassword(
@@ -35,32 +77,12 @@ export const AuthProvider = ({ children }) => {
         photoURL: photoURL?.trim() || null,
       });
 
-      // Get the Firebase ID token
-      const token = await result.user.getIdToken();
+      await saveUserToDB(result.user);
+      const dbUser = await fetchUserFromDB(result.user);
 
-      // Call your backend to create the user in MongoDB
-      const response = await fetch('http://localhost:5000/api/v1/users', {
-        method: 'POST',
-        headers: {
-          Authorization: `Bearer ${token}`,
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          email,
-          name: name?.trim() || null,
-          photoURL: photoURL?.trim() || null,
-          role: 'user', // default role
-          createdAt: new Date(),
-        }),
-      });
-
-      if (!response.ok) {
-        throw new Error('Failed to create user profile');
-      }
-
-      setUser(result.user);
+      setUser(dbUser);
       toast.success('Account created successfully!');
-      return result.user;
+      return dbUser;
     } catch (error) {
       const message = getAuthErrorMessage(error);
       toast.error(message);
@@ -68,31 +90,29 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-  // SIGN IN: sign in with email
+  // -------------------
+  // Sign In: Email/password
+  // -------------------
   const signInUser = async (email, password) => {
     try {
       const result = await signInWithEmailAndPassword(auth, email, password);
       await result.user.reload();
 
-      // ISEMAIL VARIFY: check email varified
-      // if (!result.user.emailVerified) {
-      //   toast.error(
-      //     'Please verify your email before signing in. Check your inbox for the verification link.',
-      //     { duration: 5000 },
-      //   );
-      //   return null;
-      // }
+      let dbUser;
+      try {
+        dbUser = await fetchUserFromDB(result.user);
+      } catch (err) {
+        if (err.response?.status === 404) {
+          await saveUserToDB(result.user);
+          dbUser = await fetchUserFromDB(result.user);
+        } else {
+          throw err;
+        }
+      }
 
-      // Get Firebase ID token here
-      const token = await result.user.getIdToken();
-
-      // Save token to localStorage
-      localStorage.setItem('jwt_token', token);
-
-      // UPDATE: current user
-      setUser(result.user);
-      toast.success(`Welcome back, ${result.user.displayName || 'User'}!`);
-      return result.user;
+      setUser(dbUser);
+      toast.success(`Welcome back!`);
+      return dbUser;
     } catch (error) {
       const message = getAuthErrorMessage(error);
       toast.error(message);
@@ -100,21 +120,29 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-  // SOCIAL LOGIN: (Google, GitHub)
+  // -------------------
+  // Social Login
+  // -------------------
   const socialLogin = async (provider) => {
     try {
       const result = await signInWithPopup(auth, provider);
-      // Get Firebase ID token here
-      const token = await result.user.getIdToken();
 
-      // Save token to localStorage
-      localStorage.setItem('jwt_token', token);
+      let dbUser;
+      try {
+        dbUser = await fetchUserFromDB(result.user);
+      } catch (err) {
+        if (err.response?.status === 404) {
+          await saveUserToDB(result.user);
+          dbUser = await fetchUserFromDB(result.user);
+        } else {
+          throw err;
+        }
+      }
 
-      setUser(result.user);
-      toast.success(`Welcome back, ${result.user.displayName || 'User'}!`);
-      return result.user;
+      setUser(dbUser);
+      toast.success(`Welcome back, ${dbUser.name || 'User'}!`);
+      return dbUser;
     } catch (error) {
-      // ERROR HANDLE:  specific social login errors
       if (error.code === 'auth/popup-closed-by-user') {
         toast.error('Sign-in was cancelled.');
       } else if (error.code === 'auth/popup-blocked') {
@@ -127,7 +155,9 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-  // RESET PASSWORD
+  // -------------------
+  // Reset Password
+  // -------------------
   const resetPassword = async (email) => {
     try {
       await sendPasswordResetEmail(auth, email);
@@ -141,7 +171,9 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-  // LOGOUT
+  // -------------------
+  // Logout
+  // -------------------
   const logout = async () => {
     try {
       await signOut(auth);
@@ -153,38 +185,53 @@ export const AuthProvider = ({ children }) => {
       throw error;
     }
   };
-  const fetchUserFromDB = async (token) => {
-    const res = await fetch('http://localhost:5000/api/v1/users/me', {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
-    if (!res.ok) throw new Error('Failed to fetch user profile');
-    return res.json();
+
+  // -------------------
+  // Refresh user manually
+  // -------------------
+  const refreshUser = async () => {
+    if (!auth.currentUser) return;
+    const dbUser = await fetchUserFromDB(auth.currentUser);
+    setUser(dbUser);
   };
-  // LISTENER: Auth state listener
+
+  // -------------------
+  // Listen to Auth changes
+  // -------------------
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
       setLoading(true);
 
-      if (currentUser) {
+      if (!currentUser) {
+        localStorage.removeItem('jwt_token');
+        setUser(null);
+        setLoading(false);
+        return;
+      }
+
+      try {
         const token = await currentUser.getIdToken();
         localStorage.setItem('jwt_token', token);
 
-        // Fetch from MongoDB
+        let dbUser;
         try {
-          const dbUser = await fetchUserFromDB(token);
-          setUser(dbUser); // Store full DB user, not just Firebase user
+          dbUser = await fetchUserFromDB(currentUser);
         } catch (err) {
-          setUser(currentUser); // Fallback
-          toast.error(err);
+          if (err.response?.status === 404) {
+            await saveUserToDB(currentUser);
+            dbUser = await fetchUserFromDB(currentUser);
+          } else {
+            throw err;
+          }
         }
-      } else {
-        localStorage.removeItem('jwt_token');
-        setUser(null);
-      }
 
-      setLoading(false);
+        setUser(dbUser);
+      } catch (err) {
+        toast.error(err.response?.data?.error || 'Failed to fetch user');
+        setUser(currentUser);
+      } finally {
+        setLoading(false);
+      }
     });
 
     return () => unsubscribe();
@@ -200,6 +247,7 @@ export const AuthProvider = ({ children }) => {
         logout,
         socialLogin,
         resetPassword,
+        refreshUser,
       }}
     >
       {children}

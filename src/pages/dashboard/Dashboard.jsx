@@ -10,7 +10,6 @@ import {
   FaHome,
 } from 'react-icons/fa';
 import { Button } from '@/components/ui/button';
-
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -26,32 +25,122 @@ import { useAuth } from '@/hooks/useAuth';
 import MyBookingsPage from '../MyBookings/MyBookings';
 import RoomManagement from './admin/RoomManagement';
 import UserManagement from './admin/UserManagement';
+import Profile from './Profile';
+import DashboardHomePage from './DashboardHomePage';
 
 export default function Dashboard() {
   const navigate = useNavigate();
   const { user, logout } = useAuth();
+  const [activeTab, setActiveTab] = useState('dashboard');
+
   const handleLogout = async () => {
     await logout();
     navigate('/');
   };
-  // Get user initials for avatar fallback
+
   const getUserInitials = () => {
     if (!user?.displayName) return 'U';
     const names = user.displayName.split(' ');
     return names.length > 1 ? `${names[0][0]}${names[1][0]}` : names[0][0];
   };
-  const [activeTab, setActiveTab] = useState('dashboard');
+
+  const isAdmin = user?.role === 'admin';
+
+  const renderSidebarMenu = () => (
+    <ul className="space-y-2">
+      {/* Dashboard (common) */}
+      <li>
+        <Button
+          onClick={() => setActiveTab('dashboard')}
+          variant={activeTab === 'dashboard' ? 'secondary' : 'ghost'}
+          className={`w-full justify-start ${
+            activeTab === 'dashboard'
+              ? 'bg-accent text-accent-foreground'
+              : 'hover:bg-white hover:text-primary'
+          }`}
+        >
+          <FaChartLine className="mr-2" /> Dashboard
+        </Button>
+      </li>
+
+      {/* Admin management options */}
+      {isAdmin && (
+        <>
+          <li>
+            <Button
+              onClick={() => setActiveTab('rooms')}
+              variant={activeTab === 'rooms' ? 'secondary' : 'ghost'}
+              className={`w-full justify-start ${
+                activeTab === 'rooms'
+                  ? 'bg-accent text-accent-foreground'
+                  : 'hover:bg-white hover:text-primary'
+              }`}
+            >
+              <FaBed className="mr-2" /> Room Management
+            </Button>
+          </li>
+          <li>
+            <Button
+              onClick={() => setActiveTab('users')}
+              variant={activeTab === 'users' ? 'secondary' : 'ghost'}
+              className={`w-full justify-start ${
+                activeTab === 'users'
+                  ? 'bg-accent text-accent-foreground'
+                  : 'hover:bg-white hover:text-primary'
+              }`}
+            >
+              <FaUsers className="mr-2" /> User Management
+            </Button>
+          </li>
+        </>
+      )}
+
+      {/* My Bookings - only for users */}
+      {!isAdmin && (
+        <li>
+          <Button
+            onClick={() => setActiveTab('bookings')}
+            variant={activeTab === 'bookings' ? 'secondary' : 'ghost'}
+            className={`w-full justify-start ${
+              activeTab === 'bookings'
+                ? 'bg-accent text-accent-foreground'
+                : 'hover:bg-white hover:text-primary'
+            }`}
+          >
+            <FaUsers className="mr-2" /> My Bookings
+          </Button>
+        </li>
+      )}
+
+      {/* My Profile - common */}
+      <li>
+        <Button
+          onClick={() => setActiveTab('profile')}
+          variant={activeTab === 'profile' ? 'secondary' : 'ghost'}
+          className={`w-full justify-start ${
+            activeTab === 'profile'
+              ? 'bg-accent text-accent-foreground'
+              : 'hover:bg-white hover:text-primary'
+          }`}
+        >
+          <FaUserCircle className="mr-2" /> My Profile
+        </Button>
+      </li>
+    </ul>
+  );
 
   const renderTabContent = () => {
     switch (activeTab) {
       case 'dashboard':
-        return <div>Dashboard Home Page</div>;
+        return <DashboardHomePage />;
       case 'rooms':
-        return <RoomManagement />;
+        return isAdmin ? <RoomManagement /> : null;
       case 'users':
-        return <UserManagement />;
+        return isAdmin ? <UserManagement /> : null;
       case 'bookings':
-        return <MyBookingsPage />;
+        return !isAdmin ? <MyBookingsPage /> : null;
+      case 'profile':
+        return <Profile />;
       default:
         return null;
     }
@@ -71,46 +160,7 @@ export default function Dashboard() {
             <FaHotel className="mr-2" /> Grand Royel
           </h2>
         </div>
-        <nav className="p-4 flex-1">
-          <ul className="space-y-2">
-            <li>
-              <Button
-                onClick={() => setActiveTab('dashboard')}
-                variant={activeTab === 'dashboard' ? 'secondary' : 'ghost'}
-                className={`w-full justify-start ${activeTab === 'dashboard' ? 'bg-accent text-accent-foreground' : 'hover:bg-white hover:text-primary'}`}
-              >
-                <FaChartLine className="mr-2" /> Dashboard
-              </Button>
-            </li>
-            <li>
-              <Button
-                onClick={() => setActiveTab('rooms')}
-                variant={activeTab === 'rooms' ? 'secondary' : 'ghost'}
-                className={`w-full justify-start ${activeTab === 'rooms' ? 'bg-accent text-accent-foreground' : 'hover:bg-white hover:text-primary'}`}
-              >
-                <FaBed className="mr-2" /> Room Management
-              </Button>
-            </li>
-            <li>
-              <Button
-                onClick={() => setActiveTab('users')}
-                variant={activeTab === 'users' ? 'secondary' : 'ghost'}
-                className={`w-full justify-start ${activeTab === 'users' ? 'bg-accent text-accent-foreground' : 'hover:bg-white hover:text-primary'}`}
-              >
-                <FaUsers className="mr-2" /> User Management
-              </Button>
-            </li>
-            <li>
-              <Button
-                onClick={() => setActiveTab('bookings')}
-                variant={activeTab === 'users' ? 'secondary' : 'ghost'}
-                className={`w-full justify-start ${activeTab === 'users' ? 'bg-accent text-accent-foreground' : 'hover:bg-white hover:text-primary'}`}
-              >
-                <FaUsers className="mr-2" /> My Bookings
-              </Button>
-            </li>
-          </ul>
-        </nav>
+        <nav className="p-4 flex-1">{renderSidebarMenu()}</nav>
         <div className="p-4 border-t border-primary-700 space-y-2">
           <Link to="/">
             <Button
@@ -123,7 +173,7 @@ export default function Dashboard() {
           <Button
             onClick={handleLogout}
             variant="ghost"
-            className="w-full justify-start  hover:bg-white hover:text-primary"
+            className="w-full justify-start hover:bg-white hover:text-primary"
           >
             <FaSignOutAlt className="mr-2" /> Logout
           </Button>
@@ -179,8 +229,7 @@ export default function Dashboard() {
                   className="cursor-pointer flex items-center gap-2"
                   onClick={handleLogout}
                 >
-                  <LogOut className="h-4 w-4" />
-                  Log out
+                  <LogOut className="h-4 w-4" /> Log out
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
@@ -199,46 +248,63 @@ export default function Dashboard() {
           <Button
             variant="ghost"
             onClick={() => setActiveTab('dashboard')}
-            className={`flex-col h-auto py-2 ${activeTab === 'dashboard' ? 'text-primary' : 'text-gray-600'}`}
+            className={`flex-col h-auto py-2 ${
+              activeTab === 'dashboard' ? 'text-primary' : 'text-gray-600'
+            }`}
           >
             <FaChartLine className="mb-1" />
             <span className="text-xs">Dashboard</span>
           </Button>
-          <Button
-            variant="ghost"
-            onClick={() => setActiveTab('rooms')}
-            className={`flex-col h-auto py-2 ${activeTab === 'rooms' ? 'text-primary' : 'text-gray-600'}`}
-          >
-            <FaBed className="mb-1" />
-            <span className="text-xs">Rooms</span>
-          </Button>
-          <Button
-            variant="ghost"
-            onClick={() => setActiveTab('users')}
-            className={`flex-col h-auto py-2 ${activeTab === 'users' ? 'text-primary' : 'text-gray-600'}`}
-          >
-            <FaUsers className="mb-1" />
-            <span className="text-xs">Users</span>
-          </Button>
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button variant="ghost" className="flex-col h-auto py-2">
-                <FaUserCircle className="mb-1" />
-                <span className="text-xs">Account</span>
+
+          {isAdmin && (
+            <>
+              <Button
+                variant="ghost"
+                onClick={() => setActiveTab('rooms')}
+                className={`flex-col h-auto py-2 ${
+                  activeTab === 'rooms' ? 'text-primary' : 'text-gray-600'
+                }`}
+              >
+                <FaBed className="mb-1" />
+                <span className="text-xs">Rooms</span>
               </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent side="top" align="center">
-              <DropdownMenuItem>
-                <FaHome className="mr-2" /> Dashboard
-              </DropdownMenuItem>
-              <DropdownMenuItem>
-                <FaUserCircle className="mr-2" /> Profile
-              </DropdownMenuItem>
-              <DropdownMenuItem className="text-red-600">
-                <FaSignOutAlt className="mr-2" /> Logout
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
+              <Button
+                variant="ghost"
+                onClick={() => setActiveTab('users')}
+                className={`flex-col h-auto py-2 ${
+                  activeTab === 'users' ? 'text-primary' : 'text-gray-600'
+                }`}
+              >
+                <FaUsers className="mb-1" />
+                <span className="text-xs">Users</span>
+              </Button>
+            </>
+          )}
+
+          {!isAdmin && (
+            <Button
+              variant="ghost"
+              onClick={() => setActiveTab('bookings')}
+              className={`flex-col h-auto py-2 ${
+                activeTab === 'bookings' ? 'text-primary' : 'text-gray-600'
+              }`}
+            >
+              <FaUsers className="mb-1" />
+              <span className="text-xs">Bookings</span>
+            </Button>
+          )}
+
+          {/* Profile */}
+          <Button
+            variant="ghost"
+            onClick={() => setActiveTab('profile')}
+            className={`flex-col h-auto py-2 ${
+              activeTab === 'profile' ? 'text-primary' : 'text-gray-600'
+            }`}
+          >
+            <FaUserCircle className="mb-1" />
+            <span className="text-xs">Profile</span>
+          </Button>
         </div>
       </div>
     </div>
