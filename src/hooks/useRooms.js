@@ -1,6 +1,7 @@
 import axiosInstance from '@/lib/axiosInstance';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
+// GET: get room
 const getRooms = async (minPrice, maxPrice) => {
   const queryParams = new URLSearchParams();
   if (minPrice !== null) queryParams.append('minPrice', minPrice);
@@ -18,15 +19,6 @@ export const useRooms = ({ minPrice, maxPrice }) => {
 };
 
 // UPDATE: update room
-// export const useUpdateRoom = () => {
-//   return useMutation({
-//     mutationFn: async ({ roomId, roomData }) => {
-//       const res = await axiosInstance.patch(`/rooms/${roomId}`, roomData);
-//       return res.data;
-//     },
-//   });
-// };
-
 export const useUpdateRoom = () => {
   const queryClient = useQueryClient();
 
