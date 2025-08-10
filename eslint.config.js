@@ -27,7 +27,7 @@ export default [
       'react-hooks': reactHooks,
       'react-refresh': reactRefresh,
       '@typescript-eslint': tseslint,
-      'unused-imports': unusedImports, // ✅ নতুন প্লাগিন
+      'unused-imports': unusedImports,
     },
     rules: {
       ...js.configs.recommended.rules,

@@ -1,11 +1,9 @@
 import { lazy } from 'react';
 import { createBrowserRouter } from 'react-router';
 import PrivateRoute from './PrivateRoutes';
-// import AdminRoute from './AdminRoutes'; // Optional for admin-only routes
-
-// Layouts
 import RootLayout from '@/layout/Root';
 import DashboardLayout from '@/layout/DashboardLayout';
+import AdminRoute from '@/components/AdminRoutes';
 
 // Public Components
 const Home = lazy(() => import('@/pages/home/Home'));
@@ -14,17 +12,23 @@ const SignUp = lazy(() => import('@/pages/signUp/SignUp'));
 const About = lazy(() => import('@/pages/About/About'));
 const Contact = lazy(() => import('@/pages/Contact/Contact'));
 const RoomsPage = lazy(() => import('@/pages/RoomPage/Room'));
-import NotFoundPage from '@/pages/NotFound/NotFound';
-import MyBookingsPage from '@/pages/MyBookings/MyBookings';
+const NotFoundPage = lazy(() => import('@/pages/NotFound/NotFound'));
 
 // Private Components
 const RoomDetailsPage = lazy(() => import('@/pages/RoomDetails/RoomDetails'));
-const MyBookings = lazy(() => import('@/pages/MyBookings/MyBookings'));
+const MyBookingsPage = lazy(() => import('@/pages/MyBookings/MyBookings'));
+const ProfilePage = lazy(() => import('@/pages/dashboard/Profile'));
 
 // Dashboard Components
-const Dashboard = lazy(() => import('@/pages/dashboard/Dashboard'));
-// const UsersManagement = lazy(() => import('@/pages/dashboard/UsersManagement'));
-// const RoomsManagement = lazy(() => import('@/pages/dashboard/RoomsManagement'));
+const DashboardHomePage = lazy(
+  () => import('@/pages/dashboard/DashboardHomePage'),
+);
+const UsersManagement = lazy(
+  () => import('@/pages/dashboard/admin/UserManagement'),
+);
+const RoomsManagement = lazy(
+  () => import('@/pages/dashboard/admin/RoomManagement'),
+);
 
 export const router = createBrowserRouter([
   {
@@ -38,21 +42,11 @@ export const router = createBrowserRouter([
       { path: 'contact', element: <Contact /> },
       { path: 'signup', element: <SignUp /> },
       { path: 'signin', element: <SignIn /> },
-
-      // Protected routes
       {
         path: 'rooms/:id',
         element: (
           <PrivateRoute>
             <RoomDetailsPage />
-          </PrivateRoute>
-        ),
-      },
-      {
-        path: 'bookings',
-        element: (
-          <PrivateRoute>
-            <MyBookings />
           </PrivateRoute>
         ),
       },
@@ -65,18 +59,26 @@ export const router = createBrowserRouter([
         <DashboardLayout />
       </PrivateRoute>
     ),
-    errorElement: <NotFoundPage />,
     children: [
-      { index: true, element: <Dashboard /> },
-      // { path: 'users', element: <UsersManagement /> },
-      // { path: 'rooms', element: <RoomsManagement /> },
+      { index: true, element: <DashboardHomePage /> },
       { path: 'bookings', element: <MyBookingsPage /> },
-
-      // Admin-only routes example:
-      // {
-      //   path: 'admin-settings',
-      //   element: <AdminRoute><AdminSettings /></AdminRoute>
-      // }
+      { path: 'profile', element: <ProfilePage /> },
+      {
+        path: 'users',
+        element: (
+          <AdminRoute>
+            <UsersManagement />
+          </AdminRoute>
+        ),
+      },
+      {
+        path: 'rooms',
+        element: (
+          <AdminRoute>
+            <RoomsManagement />
+          </AdminRoute>
+        ),
+      },
     ],
   },
   {

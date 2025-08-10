@@ -75,7 +75,7 @@ export default function Navbar() {
 
               <button
                 onClick={toggleTheme}
-                className="mr-4 p-2 rounded-full text-gray-300 dark:text-black bg-gray-900 dark:bg-gray-200 dark:hover:bg-gray-700 transition cursor-pointer"
+                className="mr-4 p-2 rounded-full  transition cursor-pointer"
                 aria-label="Toggle Dark Mode"
               >
                 {theme === 'dark' ? (
