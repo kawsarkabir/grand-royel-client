@@ -13,7 +13,7 @@ export function UserReviewsCarousel() {
       try {
         const res = await axiosInstance.get('/reviews');
         const sorted = res.data.sort(
-          (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
+          (a, b) => new Date(b.createdAt) - new Date(a.createdAt),
         );
         setReviews(sorted);
       } catch (error) {
@@ -27,7 +27,9 @@ export function UserReviewsCarousel() {
   if (reviews.length === 0) {
     return (
       <section className="pb-16 text-center">
-        <p className="text-lg text-muted-foreground">No reviews available yet.</p>
+        <p className="text-lg text-muted-foreground">
+          No reviews available yet.
+        </p>
       </section>
     );
   }
@@ -49,7 +51,6 @@ export function UserReviewsCarousel() {
 
       {/* Marquee Line 1 - Left to Right */}
       <Marquee
-        gradient={true}
         speed={90}
         pauseOnHover
         className="mb-3"
@@ -62,14 +63,7 @@ export function UserReviewsCarousel() {
       </Marquee>
 
       {/* Marquee Line 2 - Right to Left */}
-      <Marquee
-        gradient={true}
-        speed={50}
-        pauseOnHover
-        direction="right"
-        loop={90}
-
-      >
+      <Marquee speed={50} pauseOnHover direction="right" loop={90}>
         {reviews.map((review) => (
           <ReviewCard key={review._id + '-reverse'} review={review} />
         ))}

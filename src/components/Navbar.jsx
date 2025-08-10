@@ -1,10 +1,9 @@
 import { useAuth } from '@/hooks/useAuth';
 import navLinks from '@/utils/navLinks';
-import { useState } from 'react';
+import { use, useState } from 'react';
 import { FaBars, FaHotel, FaXmark } from 'react-icons/fa6';
 import { Link, NavLink } from 'react-router';
 import { Button } from './ui/button';
-import ThemeToggle from './ThemeToggle';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -15,8 +14,11 @@ import {
 } from './ui/dropdown-menu';
 import { Avatar, AvatarFallback, AvatarImage } from './ui/avatar';
 import { LayoutDashboard, LogOut } from 'lucide-react';
+import { CiDark, CiLight } from 'react-icons/ci';
+import { ThemeContext } from '@/context/ThemeContext';
 
 export default function Navbar() {
+  const { theme, toggleTheme } = use(ThemeContext);
   const [openMenu, setOpenMenu] = useState(false);
   const { user, logout } = useAuth();
 
@@ -71,7 +73,17 @@ export default function Navbar() {
                   ))}
               </ul>
 
-              <ThemeToggle />
+              <button
+                onClick={toggleTheme}
+                className="mr-4 p-2 rounded-full text-gray-300 dark:text-black bg-gray-900 dark:bg-gray-200 dark:hover:bg-gray-700 transition cursor-pointer"
+                aria-label="Toggle Dark Mode"
+              >
+                {theme === 'dark' ? (
+                  <CiLight size={24} />
+                ) : (
+                  <CiDark size={24} />
+                )}
+              </button>
 
               {user ? (
                 <DropdownMenu>

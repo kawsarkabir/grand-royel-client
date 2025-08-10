@@ -64,10 +64,9 @@ export default function SignIn() {
     <div className="min-h-screen flex items-center justify-center px-4">
       <form
         onSubmit={handleSignIn}
-        className="w-full max-w-md bg-white shadow-md rounded p-6 space-y-4"
+        className="w-full max-w-md shadow rounded p-6 space-y-4 dark:bg-muted text-muted-foreground"
       >
         <h2 className="text-2xl font-semibold text-center">Sign In</h2>
-
         <div className="space-y-2">
           <Label htmlFor="email">Email</Label>
           <Input

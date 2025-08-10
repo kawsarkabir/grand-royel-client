@@ -4,7 +4,7 @@ import { Link } from 'react-router';
 
 export function Footer() {
   return (
-    <footer className="bg-foreground text-background py-20 mt-10">
+    <footer className="bg-muted text-muted-foreground py-20 mt-10">
       <div className="container mx-auto px-4">
         <div className="grid md:grid-cols-4 gap-8">
           <div>
@@ -16,26 +16,66 @@ export function Footer() {
                 <span className="font-bold text-lg">Grand Royal</span>
               </div>
             </div>
-            <p className="text-sm text-muted-foreground">Experience luxury and comfort in the heart of the city.</p>
+            <p className="text-sm text-muted-foreground">
+              Experience luxury and comfort in the heart of the city.
+            </p>
           </div>
 
           <div>
             <h4 className="font-bold mb-4">Quick Links</h4>
             <ul className="space-y-2 text-sm text-muted-foreground">
-              <li><Link to="/" className="hover:text-primary transition-colors">Home</Link></li>
-              <li><Link to="/about" className="hover:text-primary transition-colors">About</Link></li>
-              <li><Link to="/contact" className="hover:text-primary transition-colors">Contact</Link></li>
-              <li><Link to="/rooms" className="hover:text-primary transition-colors">Rooms</Link></li>
-              <li><Link to="/signin" className="hover:text-primary transition-colors">Login</Link></li>
+              <li>
+                <Link to="/" className="hover:text-primary transition-colors">
+                  Home
+                </Link>
+              </li>
+              <li>
+                <Link
+                  to="/about"
+                  className="hover:text-primary transition-colors"
+                >
+                  About
+                </Link>
+              </li>
+              <li>
+                <Link
+                  to="/contact"
+                  className="hover:text-primary transition-colors"
+                >
+                  Contact
+                </Link>
+              </li>
+              <li>
+                <Link
+                  to="/rooms"
+                  className="hover:text-primary transition-colors"
+                >
+                  Rooms
+                </Link>
+              </li>
+              <li>
+                <Link
+                  to="/signin"
+                  className="hover:text-primary transition-colors"
+                >
+                  Login
+                </Link>
+              </li>
             </ul>
           </div>
 
           <div>
             <h4 className="font-bold mb-4">Services</h4>
             <ul className="space-y-2 text-sm text-muted-foreground">
-              <li className="flex items-center gap-2"><FaWifi className="h-3 w-3" /> Free Wi-Fi</li>
-              <li className="flex items-center gap-2"><FaSwimmingPool className="h-3 w-3" /> Swimming Pool</li>
-              <li className="flex items-center gap-2"><FaCar className="h-3 w-3" /> Valet Parking</li>
+              <li className="flex items-center gap-2">
+                <FaWifi className="h-3 w-3" /> Free Wi-Fi
+              </li>
+              <li className="flex items-center gap-2">
+                <FaSwimmingPool className="h-3 w-3" /> Swimming Pool
+              </li>
+              <li className="flex items-center gap-2">
+                <FaCar className="h-3 w-3" /> Valet Parking
+              </li>
             </ul>
           </div>
 
